@@ -1,0 +1,42 @@
+<script>
+    let selected_profile = JSON.parse("{{selected_profile_s|escapejs}}")
+    let edit_profile_app = new Vue({
+        el: "#edit-profile-app",
+        data: {
+            profile_id: selected_profile.id,
+            first_name: selected_profile.first_name,
+            last_name: selected_profile.last_name,
+            mobile: selected_profile.mobile,
+            bio: selected_profile.bio,
+            address: selected_profile.address,
+            email: selected_profile.email,
+            edited_successfully: false,
+        },
+        methods: {
+            edit_profile: function () {
+                let url = "{% url 'authentication:edit_profile' profile_id=selected_profile.id %}"
+                let payload = {
+                    // profile_id:edit_profile_app.profile_id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    first_name: edit_profile_app.first_name,
+                    last_name: edit_profile_app.last_name,
+                    mobile: edit_profile_app.mobile,
+                    bio: edit_profile_app.bio,
+                    address: edit_profile_app.address,
+                    email: edit_profile_app.email,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    if (data.result === 'SUCCEED') {
+
+                        edit_profile_app.edited_successfully = true
+                        setTimeout(() => {
+                            edit_profile_app.edited_successfully = false
+
+                        }, 1500);
+                    }
+                })
+            },
+        },
+    })
+</script>

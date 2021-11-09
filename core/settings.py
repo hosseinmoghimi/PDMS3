@@ -1,0 +1,1 @@
+from pdms.server_settings import ADMIN_URL,SITE_URL,STATIC_URL,MEDIA_URL,DEBUG

@@ -1,5 +1,75 @@
 {% extends "web/layout.html" %}
+{% block title %}
+communication!
+{% endblock %}
+
+
 
 {% block content %}
-{{name}}
+{% if perms.communication.add_comserver %}
+{% endif %}
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card card-stats">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                <h3 class="text-left">Com Servers</h3>
+                {{admin_utility.get_add_comserver|safe}}
+
+                {% include "web/includes/table-comservers.html" %}
+
+
+
+
+            </div>
+        </div>
+        <div class="card card-stats">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                <h3 class="text-left">Buses</h3>
+                {{admin_utility.get_add_bus|safe}}
+
+                {% include "web/includes/table-buses.html" %}
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card card-stats">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                <h3 class="text-left">Feeders</h3>
+                {{admin_utility.get_add_feeder|safe}}
+                {% include "web/includes/table-feeders.html" %}
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
 {% endblock content %}
+
+
+{% block script %}
+<script>
+    let a = 90
+</script>
+
+{% endblock script %}

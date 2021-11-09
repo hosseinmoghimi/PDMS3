@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'web',
+    'core',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +108,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY=server_settings.SECRET_KEY
 
+DEBUG = server_settings.DEBUG
 SITE_URL = server_settings.SITE_URL
 STATIC_URL = server_settings.STATIC_URL
 MEDIA_URL = server_settings.MEDIA_URL
@@ -114,6 +117,7 @@ STATIC_ROOT = server_settings.STATIC_ROOT
 MEDIA_ROOT = server_settings.MEDIA_ROOT
 STATICFILES_DIRS=server_settings.STATICFILES_DIRS
 
+ADMIN_URL=server_settings.ADMIN_URL
 
 ALLOWED_HOSTS = server_settings.ALLOWED_HOSTS
 

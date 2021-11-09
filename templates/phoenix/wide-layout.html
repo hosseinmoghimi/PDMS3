@@ -1,0 +1,44 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+    {% include "phoenix/includes/head.html" %}
+
+    {% block head %}
+
+    {% endblock %}
+</head>
+
+<body>
+    <div class="px-5" style="margin-bottom: 75px;">
+
+        {% include "phoenix/includes/navbar.html" %}
+
+        <div class="pt-5" style="margin-top:50px;">
+
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+
+
+
+    </div>
+    {% include "phoenix/includes/footer.html" %}
+   
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    {% csrf_token %}
+    {% include "phoenix/includes/layout-scripts.html" %}
+
+
+    {% block script %}
+
+    {% endblock %}
+
+
+
+</body>
+
+</html>

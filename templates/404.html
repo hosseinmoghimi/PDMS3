@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404</title>
+    <link rel="stylesheet" href="{% static 'leo/css/font-farsi.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+
+
+
+    <!-- about -->
+    <div class="about">
+        <a class="bg_links social portfolio" href="{% url 'web:home' %}" target="_blank">
+            <span class="icon"></span>
+        </a>
+        <a class="bg_links social dribbble" href="{% url 'web:home' %}" target="_blank">
+            <span class="icon"></span>
+        </a>
+        <a class="bg_links social linkedin" href="{% url 'web:home' %}" target="_blank">
+            <span class="icon"></span>
+        </a>
+        <a class="bg_links logo"></a>
+        <link rel="stylesheet" href="{% static '404.css' %}">
+        <!-- <link rel="stylesheet" href="{% static 'admin/css/farsi-font.css' %}"> -->
+
+    </div>
+    <!-- end about -->
+   
+    <nav>
+        <div class="menu">
+            <p class="website_name">
+                <a href="{% url 'web:home' %}">
+
+                    {{app.title.value}}
+                </a>
+
+                
+            </p>
+            {% if user.is_authenticated %}
+              
+            <div class="menu_links">
+                {% for app in apps %}
+                  
+                <a href="{{app.home_url}}" class="link farsi">{{app.title}}</a>
+                {% endfor %}
+                <a href="{{profile.get_absolute_url}}" class="link farsi">
+                    <img src="{{profile.image}}" alt="" class="rounded-circle" width="48">
+                    <span class="farsi">
+                        
+                        {{profile.name}}
+                    </span>
+                    
+                </a>
+            </div>
+            {% endif %}
+            <div class="menu_icon">
+                <span class="icon"></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="wrapper">
+
+        <div class="container">
+
+            <div id="scene" class="scene" data-hover-only="false">
+
+
+                <div class="circle" data-depth="1.2"></div>
+
+                <div class="one" data-depth="0.9">
+                    <div class="content">
+                        <span class="piece"></span>
+                        <span class="piece"></span>
+                        <span class="piece"></span>
+                    </div>
+                </div>
+
+                <div class="two" data-depth="0.60">
+                    <div class="content">
+                        <span class="piece"></span>
+                        <span class="piece"></span>
+                        <span class="piece"></span>
+                    </div>
+                </div>
+
+                <div class="three" data-depth="0.40">
+                    <div class="content">
+                        <span class="piece"></span>
+                        <span class="piece"></span>
+                        <span class="piece"></span>
+                    </div>
+                </div>
+
+                <p class="p404" data-depth="0.50">404</p>
+                <p class="p404" data-depth="0.10">404</p>
+
+            </div>
+
+            <div class="text">
+                <article>
+                    <p class="farsi">متاسفانه<br>صفحه مورد نظر شما پیدا نشد.</p>
+                    <a class="farsi" href="{{SITE_URL}}">
+                        <button> خانه </button></a>
+                </article>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // Parallax Code
+        var scene = document.getElementById('scene');
+        var parallax = new Parallax(scene);
+    </script>
+
+</body>
+
+</html>

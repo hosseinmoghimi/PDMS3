@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        Monitoring
+    </title>
+
+
+    <link rel="stylesheet" href="/static/leo/css/font-farsi.css">
+    {% include "web/includes/monitoring-style.html" %}
+
+    <script type="text/javascript" src="/static/charts/loader.js"></script>
+    <link rel="stylesheet" href="/static/vendor/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/vendor/css/material-icons.css">
+
+
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
+    <script type="text/javascript">
+
+
+
+        let feeders = JSON.parse(`{{feeders_s|escapejs}}`)
+        let buses = JSON.parse(`{{buses_s|escapejs}}`)
+
+
+
+        google.charts.load('current', { packages: ["orgchart"] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('string', 'Manager');
+            data.addColumn('string', 'ToolTip');
+
+            // For each orgchart box, provide the name, manager, and tooltip to show.
+
+
+            // data.addRows([
+            //   [{ 'v': 'Mike', 'f': 'Mike<div style="color:red; font-style:italic">President</div>' }, '', 'The President'],
+            //   [{ 'v': 'Jim', 'f': 'Jim<div style="color:red; font-style:italic">Vice President</div>' }, 'Mike', 'VP'],
+            //   ['Alice', 'Mike', ''],
+            //   ['Bob', 'Jim', 'Bob Sponge'],
+            //   ['Carol', 'Bob', ''],
+            //   [{ 'v': 'Hossein', 'f': '<span style="color:blue;display:block;">حسین</span> IT manager' }, 'Bob', 'IT man'],
+            // ]);
+
+
+
+            let name = 'name'
+            let caption = 'caption'
+            let manager = 'manager'
+            let tooltip = 'tooltip'
+
+
+            // name='name'
+            // caption='caption'
+            // manager='manager'
+            // tooltip='tooltip'
+            // data.addRow([{'v':name, 'f':caption}, manager, tooltip])
+
+            // name='name'
+            // caption='caption'
+            // manager='manager'
+            // tooltip='tooltip'
+            // data.addRow([{'v':name, 'f':caption}, manager, tooltip])
+
+            feeders.forEach(feeder => {
+                // console.log(element)
+                id = feeder.id.toString(10)
+                caption = feeder.panel,
+                    manager = feeder.bus.id ? ("b" + feeder.bus.id.toString(10)) : null
+                tooltip = 'feeder'
+                data.addRow([{ 'v': id, 'f': caption }, manager, tooltip])
+            });
+
+            buses.forEach(bus => {
+                // console.log(element)
+                id = "b" + bus.id.toString(10)
+                caption = bus.panel,
+
+
+                    manager = null,
+                    tooltip = 'bus'
+                data.addRow([{ 'v': id, 'f': caption }, manager, tooltip])
+            });
+
+            // Create the chart.
+            var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+            // Draw the chart, setting the allowHtml option to true for the tooltips.
+            chart.draw(data, { 'allowHtml': true });
+        }
+
+
+
+    </script>
+
+</head>
+
+<body style="background-color: #74a5bd;" id="app">
+    <div style="">
+        <a href="{% url 'web:home' %}">Home</a>
+    </div>
+
+    <div style="">
+        <a href="{% url 'web:home' %}">Home</a>
+    </div>
+
+
+    <div style="margin-top: 2em;">
+        <h3 style="text-align: center;">Feeders and Buses</h3>
+        <h2 style="text-align: center;"></h2>
+    </div>
+
+    <div id="chart_div">
+
+    </div>
+    <script src="{% static 'vendor/js/vue.min.js' %}"></script>
+
+    <script>
+
+    </script>
+    {% csrf_token %}
+    <script>
+        let iii = 0
+        let url_get_bus_data = "{% url 'web:get_bus_data' %}"
+        var csrfmiddlewaretoken = ''
+        $(document).ready(function () {
+            csrfmiddlewaretoken = $("input[name='csrfmiddlewaretoken']").val()
+            timer(callback)
+
+
+        });
+
+
+
+
+
+        function timer(cb) {
+            window.setTimeout(function () {
+                cb();
+                timer(cb);
+
+            }, monitoring_app.refresh_delay * 1000);
+        }
+        var callback = function () {
+            // try {
+            //     feeders.forEach(feeder => {
+
+            //     feeder.circuitbreakers.forEach(circuit_breaker => {
+            //         console.log(circuit_breaker.id)
+            //     });
+            // });
+            //     } catch (error) {
+
+            //     }
+            buses.forEach(bus => {
+
+                get_bus_data(bus)
+            });
+            drawChart()
+
+        }
+        get_bus_data=function(bus){
+            let payload = {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                bus_id: bus.id
+            }
+            let posting = $.post(url_get_bus_data, payload)
+            posting.done((data) => {
+                console.log(data)
+                feeders = data.feeders
+                bus = data.bus
+            })
+        }
+        let monitoring_app = new Vue({
+            el: "#app",
+            data: {
+                refresh_delay: 5,
+                feeders: feeders,
+                buses: buses,
+            },
+            methods: {
+                showLog: function (component_name) {
+                    console.log(component_name)
+                    return true
+                },
+            },
+        })
+
+
+    </script>
+</body>
+
+</html>

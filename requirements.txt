@@ -1,0 +1,28 @@
+django-social-share
+cryptography 
+Django
+django-cleanup
+# django-group-by
+django-mysql
+django-resized
+django-tinymce
+djangorestframework
+djecrety
+mysqlclient
+openpyxl
+persiantools
+Pillow
+pusher
+pylint
+PyMySQL
+qrcode
+requests
+sqlparse
+toml
+pylint-django
+# gunicorn
+# django-heroku
+python-resize-image
+django-allauth
+python-dateutil
+pyModbusTCP

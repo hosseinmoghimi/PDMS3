@@ -1,0 +1,79 @@
+<div class="card mb-3" id="edit-profile-app">
+    <div class="card-body">
+        <form @submit.prevent="edit_profile()">
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">نام</h6>
+                </div>
+                <div class="col-sm-9 text-secondary farsi">
+                    <input placeholder="first_name" v-model="first_name" type="text" class="form-control">
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <h6 class="mb-0">نام خانوادگی</h6>
+                </div>
+                <div class="col-sm-9 text-secondary farsi">
+                    <input placeholder="last_name" v-model="last_name" type="text" class="form-control">
+
+                </div>
+            </div>
+            <hr>
+
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <h6 class="mb-0">ایمیل</h6>
+                </div>
+                <div class="col-sm-9 text-secondary farsi">
+                    <input placeholder="email" v-model="email" type="text" class="form-control">
+
+                </div>
+            </div>
+            <hr>
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">همراه</h6>
+                </div>
+                <div class="col-sm-9 text-secondary farsi">
+                    <input placeholder="mobile" v-model="mobile" type="text" class="form-control">
+
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">بیو</h6>
+                </div>
+                <div class="col-sm-9 text-secondary farsi">
+                    <input placeholder="bio" v-model="bio" type="text" class="form-control">
+
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">آدرس</h6>
+                </div>
+                <div class="col-sm-9 text-secondary farsi">
+                    <input placeholder="address" v-model="address" type="text" class="form-control">
+
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-info farsi btn-outline-info text-light" type="submit">ویرایش</button>
+                </div>
+            </div>
+            <p v-if="edited_successfully" class="px-3 my-3 text-center alert alert-success">
+                    با موفقیت ویرایش شد.
+            </p>
+        </form>
+
+    </div>
+</div>

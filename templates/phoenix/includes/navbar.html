@@ -1,0 +1,101 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top ">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" title="{{app.title}}" href="{{app.home_url}}">
+        <img width="64" src="{% static 'logo.png' %}" alt="">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% block navbar %}
+            {% endblock %}
+            {% if help_url %}
+              
+            <li class="nav-item my-auto mx-2">
+                <a class="nav-link farsi " href="{{help_url}}">
+                    <i class="material-icons" aria-hidden="true">help</i>
+                    {% if help_title %}
+                    {{help_title}}
+                      {% else %}
+                      راهنما
+                    {% endif %}
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.change_parameter %}
+            <li class="nav-item my-auto mx-2">
+                <a target="_blank" class="nav-link farsi " href="{{ADMIN_URL}}{{APP_NAME}}/">
+                    <i class="material-icons" aria-hidden="true">settings</i>
+                    مدیریت
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.core.change_parameter %}
+            <li class="nav-item my-auto mx-2">
+                <a class="nav-link farsi " href="{% url 'dashboard:parameters' app_name=APP_NAME %}">
+                    <span class="material-icons">
+                        construction
+                    </span>
+                    پارامتر ها
+                </a>
+            </li>
+            {% endif %}
+            <li class="nav-item dropdown  my-auto farsi mx-2">
+                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons" aria-hidden="true">apps</i>
+                    برنامه ها
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% for app in apps %}
+                    <a class="dropdown-item" href="{{app.home_url}}">{{app.title}}</a>
+                    {% endfor %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+            {% if profile %}
+            <li class="nav-item dropdown farsi mx-2">
+                <a title="{{profile.name}}" class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="{{profile.image}}" class="rounded-circle" width="48" alt="">
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="text-center mb-2">
+                        <img src="{{profile.image}}" class="rounded-circle" width="64" alt="">
+                    </div>
+                    <a class="dropdown-item text-center" href="{{profile.get_absolute_url}}">
+                        {{profile.name}}
+                    </a>
+                    <a class="dropdown-item text-center" href="{{profile.get_reset_password_url}}">
+                        تغییر دادن کلمه عبور
+                    </a>
+                    <a class="dropdown-item text-center" href="{{profile.get_dashboard_url}}">دشبورد</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-center" href="{% url 'authentication:logout' %}">خروج</a>
+                </div>
+            </li>
+            {% else %}
+            <li class="nav-item my-auto mx-2">
+                <a class="nav-link farsi" href="{% url 'authentication:register' %}">ثبت نام</a>
+            </li>
+            <li class="nav-item my-auto mx-2">
+                <a class="nav-link farsi" href="{% url 'authentication:login' %}">ورود</a>
+            </li>
+            {% endif %}
+        </ul>
+        {% if search_form %}
+        <form class="form-inline my-2 " action="{{search_action}}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="app_name" value="{{APP_NAME}}">
+            <input required class="d-inline form-control mr-sm-2" type="search" name="search_for"
+                placeholder="جستجو ..." aria-label="Search">
+            <button class="d-inline btn btn-outline-success my-2 my-sm-0" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</nav>

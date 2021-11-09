@@ -1,0 +1,50 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+    {% include "phoenix/includes/head.html" %}
+
+    {% block head %}
+
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container">
+        <div class="pt-5">
+
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <a href="{{SITE_URL}}">
+        
+                            <img class="mb-4" src="{% static 'logo-phoenix.png' %}" alt="" width="128" height="128">
+                        </a>
+                    </div>
+
+{% block content %}
+  
+{% endblock content %}
+
+</div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+</div>
+     
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    {% csrf_token %}
+    {% include "phoenix/includes/layout-scripts.html" %}
+
+
+    {% block script %}
+
+    {% endblock %}
+</body>
+
+</html>

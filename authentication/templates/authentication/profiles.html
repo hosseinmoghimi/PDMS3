@@ -1,0 +1,168 @@
+{% extends "base-layout.html" %}
+{% load static %}
+{% block head %}
+<style>
+    body {
+        margin-top: 20px;
+        color: #1a202c;
+        text-align: left;
+        background-color: #e2e8f0;
+    }
+
+    .main-body {
+        padding: 15px;
+    }
+
+    .card {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, .125);
+        border-radius: .25rem;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1rem;
+    }
+
+    .gutters-sm {
+        margin-right: -8px;
+        margin-left: -8px;
+    }
+
+    .gutters-sm>.col,
+    .gutters-sm>[class*=col-] {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .mb-3,
+    .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .bg-gray-300 {
+        background-color: #e2e8f0;
+    }
+
+    .h-100 {
+        height: 100% !important;
+    }
+
+    .shadow-none {
+        box-shadow: none !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="main-body ">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb" style="direction: rtl;">
+                <li class="breadcrumb-item"><a href="{% url 'projectmanager:home' %}">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{{selected_profile.get_absolute_url}}"
+                        class="mr-2">{{selected_profile.name}}</a></li>
+                <li class="breadcrumb-item"><a href="{{selected_profile.get_edit_url_panel}}" class="mr-2">ویرایش</a>
+                </li>
+            </ol>
+        </nav>
+        <!-- /Breadcrumb -->
+
+        <div class="row gutters-sm" style="direction: rtl;">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+
+
+                </div>
+
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3" id="profiles-app">
+                    <div class="card-header">
+                        <h4 class="title">
+                            لیست پروفایل ها
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" placeholder="جستجو ..." class="form-control farsi my-4" v-model="search_for"
+                            @input="filter()">
+                        <div v-for="profile in profiles">
+                            <hr>
+                            <div class="media">
+                                <img :src="profile.image" width="48" alt="" class="rounded-circle">
+                                <div class="media-body farsi text-right mr-2">
+                                    <div>
+                                        <a :href="profile.get_absolute_url" :title="profile.name" class="docs-creator">
+                                            <span v-text="profile.name">
+
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <div class="small text-secondary">
+                                        <span v-text="profile.bio"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row gutters-sm">
+
+
+
+                    {% block table %}
+
+                    {% endblock %}
+
+                </div>
+
+
+                {% block content_profile %}
+
+                {% endblock content_profile %}
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let profiles = JSON.parse(`{{profiles_s|escapejs}}`)
+    let profiles_app = new Vue({
+        el: "#profiles-app",
+        data: {
+            search_for: "",
+            profiles: profiles
+        },
+        methods: {
+            filter: function () {
+                this.profiles = profiles.filter((profile) => {
+                    if(profile.name.indexOf(profiles_app.search_for) > -1) return true
+                    if(profile.mobile!=null && profile.mobile.indexOf(profiles_app.search_for) > -1) return true
+                    return false
+                })
+            }
+        }
+    })
+</script>
+{% endblock %}

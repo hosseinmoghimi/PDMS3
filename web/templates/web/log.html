@@ -1,0 +1,49 @@
+{% extends "web/layout.html" %}
+
+
+  
+
+
+
+{% block content %}
+<h3>
+    Logs
+</h3>
+
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <tbody>
+                {% for log in logs %}
+                  
+                <tr >
+                    <td>
+                        {{log.id}}
+                    </td>
+                    <td>
+                        {{log.title}}
+                    </td>
+                    <td>
+                        <small>
+                            {{log.date_added}}
+
+                        </small>
+                    </td>
+                    <td>
+                        <a href="{{log.device.get_absolute_url}}" >
+                            {{log.device.name}}
+
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block script %}
+{% endblock %}

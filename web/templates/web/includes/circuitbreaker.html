@@ -1,0 +1,25 @@
+<div class="text-center">
+    <img :src="circuit_breaker.schematic" alt="" srcset="">
+
+</div>
+
+<div class="togglebutton ltr">
+    <span v-text="circuit_breaker.name"></span>
+
+    <label>
+        <input @input="toggle_state(circuit_breaker)" type="checkbox"
+            :checked="circuit_breaker.checked">
+        <span :class="'toggle text-'+circuit_breaker.color"></span>
+        <span v-text="circuit_breaker.status"></span>
+    </label>
+    <div class="">
+
+        <button @click="get_status(circuit_breaker)" class="btn btn-warning">
+            Read Status
+        </button>
+    </div>
+    <div v-for="status in statuses">
+
+        <span v-text="status"></span>
+    </div>
+</div>
