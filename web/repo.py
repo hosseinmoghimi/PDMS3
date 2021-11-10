@@ -21,6 +21,15 @@ class ComServerRepo:
             search_for=kwargs['search_for']
             objects=objects.filter(Q(title__contains=search_for))
         return objects
+        
+    def read(self,*args, **kwargs):
+        if not self.user.has_perm(APP_NAME+".view_comserver"):
+            return
+        com_server=self.com_server(*args, **kwargs)
+        if com_server is None:
+            return
+        
+        
     def com_server(self,*args, **kwargs):
         pk=0
         if 'com_server_id' in kwargs:
