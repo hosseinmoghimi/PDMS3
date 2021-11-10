@@ -6,7 +6,7 @@ app_name=APP_NAME
 urlpatterns = [
     path('',(views.BasicViews().home),name="home"),
     path('bus_monitoring/<int:bus_id>/',login_required(views.BasicViews().monitoring),name="bus_monitoring"),
-    path('com_server/<int:pk>/',views.BasicViews().com_server,name="comserver"),
+    path('com_server/<int:pk>/',views.ComServerViews().com_server,name="comserver"),
     path('node/<int:pk>/',views.BasicViews().node,name="node"),
     path('feeder/<int:pk>/',views.BasicViews().feeder,name="feeder"),
     path('bus/<int:pk>/',views.BasicViews().bus,name="bus"),
@@ -24,5 +24,7 @@ urlpatterns = [
     path('circuit_breaker_toggle/',login_required(apis.BasicApi().circuit_breaker_toggle),name="circuit_breaker_toggle"),
     path('circuit_breaker_read/',login_required(apis.BasicApi().circuit_breaker_read),name="circuit_breaker_read"),
     path('add_input_command/',login_required(views.BasicViews().add_input_command),name="add_input_command"),
+    path('read_com_server/',login_required(apis.ComServerApi().read_com_server),name="read_com_server"),
+    
 ]
 

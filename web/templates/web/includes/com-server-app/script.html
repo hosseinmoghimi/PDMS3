@@ -1,0 +1,56 @@
+<script>
+    let com_server_id = parseInt("{{com_server.id}}")
+    let com_server_app = new Vue({
+        el: "#com-server-app",
+        data: {
+            com_server_id: com_server_id,
+            address: 1,
+            count: 1,
+            values: [],
+            succeed: false,
+            failed: false,
+            waiting: false,
+        },
+        methods: {
+            read: function () {
+                com_server_app.done = false
+                com_server_app.waiting = true
+                let url = "{% url 'web:read_com_server' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    count: this.count,
+                    address: this.address,
+                    com_server_id: this.com_server_id,
+                }
+                console.log(payload)
+                let posting = $.post(url, payload)
+                posting.fail((data) => {
+                    console.log(data)
+                    com_server_app.failed = true
+                    setTimeout(() => {
+                        com_server_app.failed = false
+                    }, 5000);
+                })
+                posting.done((data) => {
+                    com_server_app.waiting = false
+
+                    if (data.result === 'SUCCEED') {
+
+                        com_server_app.values = data.values
+                        com_server_app.succeed = true
+                        setTimeout(() => {
+                            com_server_app.succeed = false
+                        }, 3000);
+                    }
+                    else {
+                        com_server_app.failed = true
+                        setTimeout(() => {
+                            com_server_app.failed = false
+                        }, 2000);
+                    }
+                })
+            }
+        }
+
+    })
+</script>

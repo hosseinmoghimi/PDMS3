@@ -7,6 +7,14 @@
     </a>
     <div class="collapse" id="pagesExamples">
         <ul class="nav">
+            {% if perms.web.change_comserver %}
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="{{ADMIN_URL}}">
+                    <span class="sidebar-mini"> M </span>
+                    <span class="sidebar-normal"> Admin </span>
+                </a>
+            </li>
+            {% endif %}
             <li class="nav-item ">
                 <a class="nav-link docs-creator" href="{% url 'web:home' %}">
                     <span class="sidebar-mini"> H </span>

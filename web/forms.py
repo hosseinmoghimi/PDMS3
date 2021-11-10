@@ -3,6 +3,10 @@ class AddFeederForm(forms.Form):
     feeder_id=forms.IntegerField(required=True)
 class GetBusDataForm(forms.Form):
     bus_id=forms.IntegerField(required=True)
+class ReadComServerForm(forms.Form):
+    com_server_id=forms.IntegerField( required=True)
+    address=forms.IntegerField( required=False)
+    count=forms.IntegerField( required=False)
     
 class GetAnalogDataForm(forms.Form):
     host=forms.CharField(max_length=50,required=True)

@@ -1,29 +1,45 @@
+from core.settings import ADMIN_URL,SITE_URL,MEDIA_URL
+from .apps import APP_NAME
+from django.shortcuts import reverse
 
-class AreaRepo:
-    def __init__(self,*args, **kwargs):
-        self.request=None
-        self.user=None
-        if 'user' in kwargs:
-            self.user=kwargs['user']
-        if 'request' in kwargs:
-            self.request=kwargs['request']
-            self.user=self.request.user
-        self.objects=Area.objects.all()
-    def list(self,*args, **kwargs):
-        objects=self.objects
-        if 'search_for' in kwargs:
-            search_for=kwargs['search_for']
-            objects=objects.filter(Q(title__contains=search_for))
-        return objects
-    def area(self,*args, **kwargs):
-        pk=0
-        if 'area_id' in kwargs:
-            pk=kwargs['area_id']
-        elif 'id' in kwargs:
-            pk=kwargs['id']
-        elif 'pk' in kwargs:
-            pk=kwargs['pk']
-        elif 'title' in kwargs:
-            return self.objects.filter(title=kwargs['title']).first()
-        return self.objects.filter(pk=pk).first()
+def word_to_int(hex_str,length):
+    max1=2**(length-1)
+    print("max : "+str(max1))
+    print("hex_str : "+str(hex_str))
+    value = int(hex_str, length)
+    value = int(hex_str)
+    print("value : "+str(value))
+    if value > max1:
+        value =value-max1*2
+    return value
+
+
+class AdminUtility():
+    def __init__(self,app_name,user):
+        self.user=user
+        self.app_name=app_name
+    def get_link(self,child_class,class_title):
+        app_name=self.app_name
+
+        app_name=APP_NAME
+        url=f'{ADMIN_URL}{app_name}/{child_class}/add/'
+        return f"""
+         <a class="btn btn-info rtl" target="_blank" href="{url}" title="افزودن {class_title}" >
+                     <i class="material-icons">add_circle</i>
+         <span >
+         Add New  
+         {class_title}
+         </span>
+                 </a>
+        """
+        
+    
+    def get_add_comserver(self):
+        return self.get_link(child_class='comserver',class_title='ComServer')
+    
+    def get_add_bus(self):
+        return self.get_link(child_class='bus',class_title='Bus')
+    
+    def get_add_feeder(self):
+        return self.get_link(child_class='feeder',class_title='Feeder')
     

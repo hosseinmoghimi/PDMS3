@@ -1,10 +1,10 @@
 from django.db import models
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
-
-from web.enums import ComServerRedundancyEnum,LogStatusEnum, VoltageLevelEnum
+from .constants import *
+from .enums import ComServerRedundancyEnum,LogStatusEnum, VoltageLevelEnum
 from .settings import ADMIN_URL
-from web.apps import APP_NAME
+from .apps import APP_NAME
 
 class Employee(models.Model):
     profile=models.ForeignKey("authentication.profile", verbose_name=_("profile"), on_delete=models.CASCADE)
@@ -25,11 +25,11 @@ class Employee(models.Model):
 class ComServer(models.Model):
     name=models.CharField(_("name"), max_length=50)
     ip1=models.CharField(_("ip1"),default="192.168.1.254", max_length=50)
-    port1=models.CharField(_("port1"),default="8080", max_length=50)
+    port1=models.CharField(_("port1"),default=str(COM_SERVER_DEFAULT_PORT), max_length=50)
     ip2=models.CharField(_("ip2"),default="192.168.2.254", max_length=50)
     port2=models.CharField(_("port2"),default="8080", max_length=50)
-    username=models.CharField(_("username"),default="root", max_length=50)
-    password=models.CharField(_("password"),default="root", max_length=50)
+    username=models.CharField(_("username"),default=COM_SERVER_DEFAULT_USER_NAME, max_length=50)
+    password=models.CharField(_("password"),default=COM_SERVER_DEFAULT_PASSWORD, max_length=50)
     redundancy=models.CharField(_("redundancy"),choices=ComServerRedundancyEnum.choices,default=ComServerRedundancyEnum.HOT, max_length=50)
     
     class_name="comserver"
@@ -38,8 +38,17 @@ class ComServer(models.Model):
         verbose_name = _("ComServer")
         verbose_name_plural = _("ComServers")
 
+
     def __str__(self):
         return self.name
+
+
+    def get_edit_btn(self):
+        return f"""
+            <a target="_blank" title="Edit {self.name}" class="mx-2 btn btn-warning btn-link" href="{self.get_edit_url()}">
+            <i class="material-icons">settings</i>
+            </a>
+        """
 
 
     def get_absolute_url(self):
@@ -57,29 +66,29 @@ class Feeder(models.Model):
     com_server=models.ForeignKey("comserver", verbose_name=_("com_server"), on_delete=models.CASCADE)
 
     
-    register_cb_open=models.IntegerField(_("register_cb_open"),default=1)
-    register_cb_close=models.IntegerField(_("register_cb_close"),default=2)
-    register_cb_test=models.IntegerField(_("register_cb_test"),default=3)
-    register_cb_trip=models.IntegerField(_("register_cb_trip"),default=4)
-    register_cb_spare1=models.IntegerField(_("register_cb_spare1"),default=4)
-    register_cb_spare2=models.IntegerField(_("register_cb_spare2"),default=4)
+    register_cb_open=models.IntegerField(_("register_cb_open"),default=REGISTER_CIRCUIT_BREAKER_OPEN)
+    register_cb_close=models.IntegerField(_("register_cb_close"),default=REGISTER_CIRCUIT_BREAKER_CLOSE)
+    register_cb_test=models.IntegerField(_("register_cb_test"),default=REGISTER_CIRCUIT_BREAKER_TEST)
+    register_cb_trip=models.IntegerField(_("register_cb_trip"),default=REGISTER_CIRCUIT_BREAKER_TRIP)
+    register_cb_spare1=models.IntegerField(_("register_cb_spare1"),default=REGISTER_CIRCUIT_BREAKER_SPARE1)
+    register_cb_spare2=models.IntegerField(_("register_cb_spare2"),default=REGISTER_CIRCUIT_BREAKER_SPARE2)
 
-    register_i_a=models.IntegerField(_("register I a"),default=5)
-    register_i_b=models.IntegerField(_("register I b"),default=6)
-    register_i_c=models.IntegerField(_("register I c"),default=7)
+    register_ct_i_a=models.IntegerField(_("register I a"),default=REGISTER_CURRENT_TRANSFORMER_I_A)
+    register_ct_i_b=models.IntegerField(_("register I b"),default=REGISTER_CURRENT_TRANSFORMER_I_B)
+    register_ct_i_c=models.IntegerField(_("register I c"),default=REGISTER_CURRENT_TRANSFORMER_I_C)
 
-    register_v_a=models.IntegerField(_("register V a"),default=8)
-    register_v_b=models.IntegerField(_("register V b"),default=9)
-    register_v_c=models.IntegerField(_("register V c"),default=10)
+    register_vt_v_a=models.IntegerField(_("register V a"),default=REGISTER_VOLTAGE_TRANSFORMER_V_A)
+    register_vt_v_b=models.IntegerField(_("register V b"),default=REGISTER_VOLTAGE_TRANSFORMER_V_B)
+    register_vt_v_c=models.IntegerField(_("register V c"),default=REGISTER_VOLTAGE_TRANSFORMER_V_C)
 
-    register_v_ab=models.IntegerField(_("register V ab"),default=11)
-    register_v_bc=models.IntegerField(_("register V bc"),default=12)
-    register_v_ac=models.IntegerField(_("register V ac"),default=13)
+    register_vt_v_ab=models.IntegerField(_("register V ab"),default=REGISTER_VOLTAGE_TRANSFORMER_V_AB)
+    register_vt_v_bc=models.IntegerField(_("register V bc"),default=REGISTER_VOLTAGE_TRANSFORMER_V_BC)
+    register_vt_v_ac=models.IntegerField(_("register V ac"),default=REGISTER_VOLTAGE_TRANSFORMER_V_AC)
 
-    register_q=models.IntegerField(_("register q"),default=14)
-    register_p=models.IntegerField(_("register p"),default=15)
-    register_s=models.IntegerField(_("register s"),default=16)
-    
+    register_q=models.IntegerField(_("register q"),default=REGISTER_Q)
+    register_p=models.IntegerField(_("register p"),default=REGISTER_P)
+    register_s=models.IntegerField(_("register s"),default=REGISTER_S)
+
     class_name="feeder"
     class Meta:
         verbose_name = _("Feeder")

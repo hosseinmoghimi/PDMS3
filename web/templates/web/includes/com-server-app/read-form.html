@@ -1,0 +1,36 @@
+{% load static %}
+<form @submit.prevent="read()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">address</label>
+                <input type="number" required v-model="address" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="">count</label>
+                <input type="number" required v-model="count" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-success">Read</button>
+
+        </div>
+    </div>
+    <span v-html="values">
+
+    </span>
+    <img src="{% static 'img/loading.gif' %}" width="32" v-if="waiting" alt="">
+
+    <div class="alert alert-info" v-if="succeed">
+
+        Data Read Successfully!
+    </div>
+    <div class="alert alert-danger" v-if="failed">
+
+        Data Read Failed!
+    </div>
+</form>

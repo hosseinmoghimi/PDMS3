@@ -1,3 +1,4 @@
+from .modbus import LeoModbus
 from django.http import request
 from .models import *
 from .constants import *
@@ -9,11 +10,11 @@ class ComServerRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
         self.user=None
-        if 'user' in kwargs:
-            self.user=kwargs['user']
         if 'request' in kwargs:
             self.request=kwargs['request']
             self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
         self.objects=ComServer.objects.all()
     def list(self,*args, **kwargs):
         objects=self.objects
@@ -28,7 +29,12 @@ class ComServerRepo:
         com_server=self.com_server(*args, **kwargs)
         if com_server is None:
             return
-        
+        address=kwargs['address'] if 'address' in kwargs else COM_SERVER_START_ADDRESS_FOR_READING
+        count=kwargs['count'] if 'count' in kwargs else COM_SERVER_COUNT_OF_REGISTERS_FOR_READING
+        leo_modbus=LeoModbus(request=self.request)
+        leo_modbus.connect(host=com_server.ip1,port=com_server.port1)
+        data=leo_modbus.read_holding_registers(address=address,count=count)
+        return data
         
     def com_server(self,*args, **kwargs):
         pk=0

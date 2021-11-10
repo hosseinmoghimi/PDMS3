@@ -1,20 +1,29 @@
+from .models import Log
+from .enums import LogStatusEnum
+from .utils import word_to_int
+from django.http import request
+from authentication.repo import ProfileRepo
 from pyModbusTCP.client import ModbusClient
-from pyModbusTCP.server import ModbusServer
 import time
 import random
 
 
 RETRY_TO_CONNECT_DELAY=0.3
-RETRY_TO_CONNECT_TIME=1
+RETRY_TO_CONNECT_TIME=2
 test=True
 DO_LOG=False
 class LeoModbus(ModbusClient):
     def __init__(self,*args, **kwargs):
         self.user=kwargs['user'] if 'user' in kwargs else None
-        if self.user is not None:
-            from authentication.repo import ProfileRepo
-            self.profile=ProfileRepo(self.user).me
-        super(LeoModbus, self).__init__(*args, **kwargs)
+        if 'request' in kwargs:
+            self.request=kwargs['request'] 
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user'] 
+        if self.user is None:
+            return
+        self.profile=ProfileRepo(request=self.request).me
+        super(LeoModbus, self).__init__()
     def connect(self,host,port):
         self.host(host)
         self.port(port)
@@ -28,8 +37,6 @@ class LeoModbus(ModbusClient):
             if not self.open():
                 print("unable to connect to "+host+":"+str(port))
                 if DO_LOG:
-                    from .models import Log
-                    from .enums import LogStatusEnum
                     title=f"unable to connect to {self.host_address}:{self.port_no} "
                     print(title)
                     log=Log(title=title,profile=self.profile,status=LogStatusEnum.UNABLE_TO_CONNECT)
@@ -48,7 +55,6 @@ class LeoModbus(ModbusClient):
             if not regs:
                 return
             for reg in regs:
-                from .utils import word_to_int
                 reg=word_to_int(str(reg),16)
                 self.regs.append(reg)
             print("reg ad #0 to 9: "+str(self.regs))

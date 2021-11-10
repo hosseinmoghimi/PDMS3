@@ -1,22 +1,22 @@
 
 <table class="table">
     <thead>
-        <th>Name</th>
-        <th>ip</th>
-        <th></th>
+        <th class="text-left">Name</th>
+        <th class="text-left">ip</th>
+        <th class="text-left"></th>
     </thead>
     <tbody>
 
         {% for com_server in com_servers %}
 
         <tr>
-            <td>
+            <td class="text-left">
                 <a href="{{com_server.get_absolute_url}}">
                     {{com_server.name}}
                 </a>
                 
             </td>
-            <td>
+            <td class="text-left">
                 <div class="ltr small text-left">
                     <span class="text-primary">{{com_server.ip1}}</span>:<span class="text-danger">{{com_server.port1}}</span>
 
@@ -28,7 +28,7 @@
             </td>
 
 
-            <td>
+            <td class="text-left">
                 {% if perms.communication.change_comserver %}
                 {{com_server.get_edit_btn|safe}}
                 {% endif %}

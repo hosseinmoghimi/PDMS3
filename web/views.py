@@ -17,6 +17,15 @@ def getContext(request):
     return context
 
  
+class ComServerViews(View):
+    def com_server(self,request,*args, **kwargs):
+        user=request.user
+        context=getContext(request)
+        com_server=ComServerRepo(user=user).com_server(*args, **kwargs)
+        context['com_server']=com_server
+        return render(request,TEMPLATE_ROOT+'com-server.html',context)
+    
+ 
 class BasicViews(View):
     
     def add_input_command(self,request,*args, **kwargs):
@@ -68,12 +77,7 @@ class BasicViews(View):
 
 
         return render(request,TEMPLATE_ROOT+'feeder.html',context)
-    def com_server(self,request,pk,*args, **kwargs):
-        user=request.user
-        context=getContext(request)
-        com_server=ComServerRepo(user=user).com_server(pk=pk)
-        context['com_server']=com_server
-        return render(request,TEMPLATE_ROOT+'com-server.html',context)
+    
     def node(self,request,pk,*args, **kwargs):
         user=request.user
         context=getContext(request)

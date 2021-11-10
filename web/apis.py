@@ -4,6 +4,26 @@ from .serializers import *
 from core.constants import SUCCEED,FAILED
 from .repo import *
 from .forms import *
+
+
+class ComServerApi(APIView):
+    def read_com_server(self,request,*args, **kwargs):
+        user=request.user
+        context={}
+        context['result']=FAILED
+
+        if request.method=='POST':
+            read_com_server_form=ReadComServerForm(request.POST)
+            if read_com_server_form.is_valid():
+                com_server_id=read_com_server_form.cleaned_data['com_server_id']
+                address=read_com_server_form.cleaned_data['address']
+                count=read_com_server_form.cleaned_data['count']
+                values=ComServerRepo(request=request).read(address=address,count=count,com_server_id=com_server_id)
+                if values is not None:
+                    context['values']=values
+                    context['result']=SUCCEED
+        return JsonResponse(context)
+
 class BasicApi(APIView):
     def add_com_server(self,request,*args, **kwargs):
         context={}
