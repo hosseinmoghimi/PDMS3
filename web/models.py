@@ -1,8 +1,10 @@
 from django.db import models
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
+
+from pdms.server_settings import STATIC_URL
 from .constants import *
-from .enums import ComServerRedundancyEnum,LogStatusEnum, VoltageLevelEnum
+from .enums import CircuitBreakerStatusEnum, ComServerRedundancyEnum,LogStatusEnum, VoltageLevelEnum
 from .settings import ADMIN_URL
 from .apps import APP_NAME
 
@@ -70,6 +72,7 @@ class Feeder(models.Model):
     register_cb_close=models.IntegerField(_("register_cb_close"),default=REGISTER_CIRCUIT_BREAKER_CLOSE)
     register_cb_test=models.IntegerField(_("register_cb_test"),default=REGISTER_CIRCUIT_BREAKER_TEST)
     register_cb_trip=models.IntegerField(_("register_cb_trip"),default=REGISTER_CIRCUIT_BREAKER_TRIP)
+    register_cb_servive=models.IntegerField(_("register_cb_trip"),default=REGISTER_CIRCUIT_BREAKER_SERVICE)
     register_cb_spare1=models.IntegerField(_("register_cb_spare1"),default=REGISTER_CIRCUIT_BREAKER_SPARE1)
     register_cb_spare2=models.IntegerField(_("register_cb_spare2"),default=REGISTER_CIRCUIT_BREAKER_SPARE2)
 
@@ -89,7 +92,62 @@ class Feeder(models.Model):
     register_p=models.IntegerField(_("register p"),default=REGISTER_P)
     register_s=models.IntegerField(_("register s"),default=REGISTER_S)
 
+
+
     class_name="feeder"
+    def circuit_breaker_status(self):
+        status=CircuitBreakerStatusEnum.FAILED
+        try:
+            cb_open=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_open).order_by('-date_added').first().value
+            cb_close=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_close).order_by('-date_added').first().value
+            cb_test=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_test).order_by('-date_added').first().value
+            cb_service=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_service).order_by('-date_added').first().value
+            cb_spare1=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_spare1).order_by('-date_added').first().value
+            cb_spare2=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_spare2).order_by('-date_added').first().value
+            if cb_close:
+                status= CircuitBreakerStatusEnum.CLOSE
+            if cb_open:
+                status= CircuitBreakerStatusEnum.OPEN
+            if cb_test:
+                status= CircuitBreakerStatusEnum.TESTING
+        except:
+            pass    
+        return status
+            
+        
+    def circuit_breaker_schematic(self):
+        status=self.circuit_breaker_status()
+        if status==CircuitBreakerStatusEnum.OPEN and self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open.png'
+        if status==CircuitBreakerStatusEnum.CLOSE and self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close.png'
+        if status==CircuitBreakerStatusEnum.OPEN and not self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open-bus-dead.png'
+        if status==CircuitBreakerStatusEnum.CLOSE and not self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close-bus-dead.png'
+
+        if status==CircuitBreakerStatusEnum.FAILED:
+            return f'{STATIC_URL}{APP_NAME}/img/CB-FAILED.png'
+        if status==CircuitBreakerStatusEnum.TESTING:
+            return f'{STATIC_URL}{APP_NAME}/img/CB-TESTING.jpg'
+    def panel(self):
+        # return ""
+        components_panels=""
+        components_panels+=f"""<div><img src="{self.circuit_breaker_schematic()}" width="100"></div>"""
+        # components_panels+=self.current_transformer.panel()
+        return f"""
+            <div>
+            
+            {components_panels}
+            <h3>
+            <a href="{self.get_absolute_url()}">
+            
+            {self.name}
+            </a>
+            </h3>
+            </div>
+        """
+    
     class Meta:
         verbose_name = _("Feeder")
         verbose_name_plural = _("Feeders")
@@ -116,6 +174,7 @@ class Bus(models.Model):
     serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=5000)
     description=models.CharField(_("description"),null=True,blank=True, max_length=5000)
     is_live=models.BooleanField(_("is live ?"),default=True)
+    class_name="bus"
     def panel(self):
         return f"""
         <div>
@@ -134,7 +193,8 @@ class Bus(models.Model):
         return reverse(APP_NAME+":bus",kwargs={'pk':self.pk})
     def get_monitoring_url(self):
         return reverse(APP_NAME+":bus_monitoring",kwargs={'bus_id':self.pk})
-
+    def get_edit_url(self):
+        return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
     def get_monitoring_btn(self):
         return f"""
             <a title="Monitor {self.name}" class="btn btn-link btn-success" href="{self.get_monitoring_url()}">

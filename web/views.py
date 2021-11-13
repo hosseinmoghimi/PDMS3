@@ -2,7 +2,7 @@ import json
 from django.http.response import Http404
 
 from core.views import CoreContext
-from web.serializers import AreaSerializer, FeederSerializer
+from web.serializers import AreaSerializer, BusSerializer, FeederSerializer, FeederSerializerForChart
 from .apps import APP_NAME
 from .forms import *
 from .repo import AreaRepo, BusRepo,ComServerRepo, FeederRepo
@@ -58,24 +58,14 @@ class BasicViews(View):
         areas_s=json.dumps(AreaSerializer(areas,many=True).data)
         context['areas_s']=areas_s
         return render(request,TEMPLATE_ROOT+'index.html',context)
-    def feeder(self,request,pk,*args, **kwargs):
+    def feeder(self,request,*args, **kwargs):
         user=request.user
         context=getContext(request)
-        feeder=FeederRepo(user=user).feeder(pk=pk)
+        feeder=FeederRepo(user=user).feeder(*args, **kwargs)
         context['feeder']=feeder
-        feeder.circuit_breaker.get_value(request=request)
-
-        context['feeder_s']=json.dumps(FeederSerializer(feeder).data)
-        context['add_input_command_form']=AddInputCommandForm()
         
         
-
-        context['value_a_list']=json.dumps(list(ai.value for ai in feeder.current_transformer.value_a_list()))
-        context['value_b_list']=json.dumps(list(ai.value for ai in feeder.current_transformer.value_b_list()))
-        context['value_c_list']=json.dumps(list(ai.value for ai in feeder.current_transformer.value_c_list()))
-
-
-
+ 
         return render(request,TEMPLATE_ROOT+'feeder.html',context)
     
     def node(self,request,pk,*args, **kwargs):
@@ -104,10 +94,10 @@ class BasicViews(View):
         logs=LogRepo(user=user).list(*args, **kwargs)
         context['logs']=logs
         return render(request,TEMPLATE_ROOT+'demo.html',context)
-    def bus(self,request,pk,*args, **kwargs):
+    def bus(self,request,*args, **kwargs):
         user=request.user
         context=getContext(request)
-        bus=BusRepo(user=user).bus(pk)
+        bus=BusRepo(user=user).bus(*args, **kwargs)
         context['bus']=bus
         return render(request,TEMPLATE_ROOT+'bus.html',context)
     def circuitbreaker(self,request,pk,*args, **kwargs):
@@ -137,6 +127,8 @@ class BasicViews(View):
         print(area)
         print(200*"*")
         return render(request,TEMPLATE_ROOT+'area.html',context)
+    
+    
     def monitoring(self,request,*args, **kwargs):
         user=request.user
         context=getContext(request)

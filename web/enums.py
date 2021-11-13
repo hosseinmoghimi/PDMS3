@@ -5,9 +5,11 @@ class VoltageLevelEnum(TextChoices):
     MV='MEDIUM_VOLTAGE',_('MEDIUM_VOLTAGE')
     LV='LOW_VOLTAGE',_('LOW_VOLTAGE')
     HV='HIGH_VOLTAGE',_('HIGH_VOLTAGE')
+
 class ComServerRedundancyEnum(TextChoices):
     HOT='HOT',_('HOT')
     STAND_BY='STAND_BY',_('STAND_BY')
+
 class LogStatusEnum(TextChoices):
     ENABLED='ENABLE',_('ENABLE')
     DISABLED='DISABLE',_('DISABLE')
@@ -21,3 +23,9 @@ class LogStatusEnum(TextChoices):
     INSTALLED='INSTALLED',_('INSTALLED')
     REMOVED='REMOVED',_('REMOVED')
     UNABLE_TO_CONNECT='unable to connect !',_('unable to connect !')
+
+class CircuitBreakerStatusEnum(TextChoices):
+    OPEN='OPEN',_('OPEN')
+    CLOSE='CLOSE',_('CLOSE')
+    TESTING='TESTING',_('TESTING')
+    FAILED='FAILED',_('FAILED')
