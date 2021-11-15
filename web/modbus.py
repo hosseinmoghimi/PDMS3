@@ -57,6 +57,7 @@ class LeoModbus(ModbusClient):
             for reg in regs:
                 reg=word_to_int(str(reg),16)
                 self.regs.append(reg)
+            
             print("reg ad #0 to 9: "+str(self.regs))
             # if success display registers
             if self.regs:

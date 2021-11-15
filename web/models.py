@@ -1,10 +1,11 @@
 from django.db import models
+from django.forms.fields import CharField
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
 from pdms.server_settings import STATIC_URL
 from .constants import *
-from .enums import CircuitBreakerStatusEnum, ComServerRedundancyEnum,LogStatusEnum, VoltageLevelEnum
+from .enums import CircuitBreakerStatusEnum, ComServerRedundancyEnum, InputOutputStatusEnum,LogStatusEnum, VoltageLevelEnum
 from .settings import ADMIN_URL
 from .apps import APP_NAME
 
@@ -93,17 +94,20 @@ class Feeder(models.Model):
     register_s=models.IntegerField(_("register s"),default=REGISTER_S)
 
 
-
+    circuit_breaker_status=models.CharField(_("circuit_breaker_status"),choices=CircuitBreakerStatusEnum.choices, max_length=50)
+    i_a=models.IntegerField(_("I a"),null=True,blank=True)
+    i_b=models.IntegerField(_("I b"),null=True,blank=True)
+    i_c=models.IntegerField(_("I c"),null=True,blank=True)
     class_name="feeder"
-    def circuit_breaker_status(self):
+    def update_circuit_breaker_status(self):
         status=CircuitBreakerStatusEnum.FAILED
         try:
-            cb_open=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_open).order_by('-date_added').first().value
-            cb_close=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_close).order_by('-date_added').first().value
-            cb_test=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_test).order_by('-date_added').first().value
-            cb_service=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_service).order_by('-date_added').first().value
-            cb_spare1=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_spare1).order_by('-date_added').first().value
-            cb_spare2=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.register_cb_spare2).order_by('-date_added').first().value
+            cb_open=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_open).order_by('-date_added').first().value()
+            cb_close=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_close).order_by('-date_added').first().value()
+            cb_test=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_test).order_by('-date_added').first().value()
+            cb_service=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_service).order_by('-date_added').first().value()
+            cb_spare1=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_spare1).order_by('-date_added').first().value()
+            cb_spare2=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_spare2).order_by('-date_added').first().value()
             if cb_close:
                 status= CircuitBreakerStatusEnum.CLOSE
             if cb_open:
@@ -112,11 +116,20 @@ class Feeder(models.Model):
                 status= CircuitBreakerStatusEnum.TESTING
         except:
             pass    
+        import random
+        
+        status=CircuitBreakerStatusEnum.choices[random.randint(0,3)][0]
+        self.circuit_breaker_status=status
         return status
             
-        
+    def update_data(self):
+        self.update_circuit_breaker_status()
+        self.i_a=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_a).order_by('-date_added').first().value()
+        self.i_b=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_b).order_by('-date_added').first().value()
+        self.i_c=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_c).order_by('-date_added').first().value()
+        self.save()
     def circuit_breaker_schematic(self):
-        status=self.circuit_breaker_status()
+        status=self.circuit_breaker_status
         if status==CircuitBreakerStatusEnum.OPEN and self.bus.is_live:
             return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open.png'
         if status==CircuitBreakerStatusEnum.CLOSE and self.bus.is_live:
@@ -213,7 +226,7 @@ class Bus(models.Model):
             return "#D4233C"
         if self.tip==VoltageLevelEnum.HV:
             return "#083C72"
-        
+
 
 class Area(models.Model):
     region=models.CharField(_("region"), max_length=50)
@@ -236,7 +249,8 @@ class InputOutput(models.Model):
     com_server=models.ForeignKey("comserver", verbose_name=_("com_server"), on_delete=models.CASCADE)
     register=models.IntegerField(_("register"))
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
-
+    status=models.CharField(_("status"),choices=InputOutputStatusEnum.choices,default=InputOutputStatusEnum.DISCONNECTED, max_length=50)
+    origin_value=models.CharField(_("origin_value"),null=True,blank=True, max_length=50)
     class Meta:
         verbose_name = _("InputOutput")
         verbose_name_plural = _("InputOutputs")
@@ -258,7 +272,10 @@ class Permission(models.Model):
 
 
 class AnalogInput(InputOutput):
-    value=models.IntegerField(_("value"),default=0)
+    def value(self):
+        if self.origin_value is None:
+            return None
+        return int(self.origin_value) 
     
     class Meta:
         verbose_name = _("AI")
@@ -268,8 +285,15 @@ class AnalogInput(InputOutput):
         return reverse("AnalogInput_detail", kwargs={"pk": self.pk})
 
 
-class BinaryInput(InputOutput): 
-    value=models.BooleanField(_("value"))
+class BinaryInput(InputOutput):
+    
+    def value(self):
+        if self.origin_value is None:
+            return False
+        if self.origin_value =="0":
+            return False
+        return True
+    
     class Meta:
         verbose_name = _("BI")
         verbose_name_plural = _("BI")

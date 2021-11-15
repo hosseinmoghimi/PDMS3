@@ -24,6 +24,22 @@ class ComServerApi(APIView):
                     context['result']=SUCCEED
         return JsonResponse(context)
 
+class FeederApi(APIView):
+    def get_feeder(self,request,*args, **kwargs):
+        user=request.user
+        context={}
+        context['result']=FAILED
+        if request.method=='POST':
+            get_feeder_form=GetFeederForm(request.POST)
+            if get_feeder_form.is_valid():
+                feeder_id=get_feeder_form.cleaned_data['feeder_id']
+                feeder=FeederRepo(request=request).feeder(feeder_id=feeder_id)
+                if feeder is not None:
+                    feeder.update_data()
+                    context['feeder']=FeederFullSerializer(feeder).data
+                    context['result']=SUCCEED
+        return JsonResponse(context)
+
 class BasicApi(APIView):
     def add_com_server(self,request,*args, **kwargs):
         context={}

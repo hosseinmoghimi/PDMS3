@@ -1,3 +1,4 @@
+from pdms.server_settings import COM_SERVER_IS_CONNECTED
 from .modbus import LeoModbus
 from django.http import request
 from .models import *
@@ -31,10 +32,36 @@ class ComServerRepo:
             return
         address=kwargs['address'] if 'address' in kwargs else COM_SERVER_START_ADDRESS_FOR_READING
         count=kwargs['count'] if 'count' in kwargs else COM_SERVER_COUNT_OF_REGISTERS_FOR_READING
-        leo_modbus=LeoModbus(request=self.request)
-        leo_modbus.connect(host=com_server.ip1,port=com_server.port1)
-        data=leo_modbus.read_holding_registers(address=address,count=count)
-        return data
+        values=None
+        TEST=False
+        if COM_SERVER_IS_CONNECTED:
+            leo_modbus=LeoModbus(request=self.request)
+            leo_modbus.connect(host=com_server.ip1,port=com_server.port1)
+            values=leo_modbus.read_holding_registers(address=address,count=count)
+        register=address
+        if values is None:
+            import random
+            for i in range(count):
+                ai=AnalogInput()
+                ai.register=register
+                ai.com_server=com_server
+                ai.status=InputOutputStatusEnum.INVALID
+                ai.status=InputOutputStatusEnum.SUCCESSFULL
+                ai.origin_value=str(random.randint(310,330))
+                # print(ai.origin_value)
+                # print(10*"#@#$")
+                ai.save()
+                register+=1
+            return None
+        for value in values:
+            ai=AnalogInput()
+            ai.register=register
+            ai.com_server=com_server
+            ai.origin_value=value
+            ai.status=InputOutputStatusEnum.SUCCESSFULL
+            ai.save()
+            register+=1
+        return values
         
     def com_server(self,*args, **kwargs):
         pk=0

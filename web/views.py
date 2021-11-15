@@ -2,7 +2,7 @@ import json
 from django.http.response import Http404
 
 from core.views import CoreContext
-from web.serializers import AreaSerializer, BusSerializer, FeederSerializer, FeederSerializerForChart
+from web.serializers import AreaSerializer, BusSerializer, FeederFullSerializer, FeederSerializer, FeederSerializerForChart
 from .apps import APP_NAME
 from .forms import *
 from .repo import AreaRepo, BusRepo,ComServerRepo, FeederRepo
@@ -16,7 +16,7 @@ def getContext(request):
     context['LAYOUT_PARENT']=LAYOUT_PARENT
     return context
 
- 
+
 class ComServerViews(View):
     def com_server(self,request,*args, **kwargs):
         user=request.user
@@ -24,8 +24,20 @@ class ComServerViews(View):
         com_server=ComServerRepo(user=user).com_server(*args, **kwargs)
         context['com_server']=com_server
         return render(request,TEMPLATE_ROOT+'com-server.html',context)
-    
- 
+
+
+class FeederViews(View):
+    def feeder(self,request,*args, **kwargs):
+        user=request.user
+        context=getContext(request)
+        feeder=FeederRepo(user=user).feeder(*args, **kwargs)
+        context['feeder']=feeder
+        feeder.update_circuit_breaker_status()
+        feeder_s=json.dumps(FeederFullSerializer(feeder).data)
+        context['feeder_s']=feeder_s
+        return render(request,TEMPLATE_ROOT+'feeder.html',context)
+
+
 class BasicViews(View):
     
     def add_input_command(self,request,*args, **kwargs):
@@ -58,15 +70,6 @@ class BasicViews(View):
         areas_s=json.dumps(AreaSerializer(areas,many=True).data)
         context['areas_s']=areas_s
         return render(request,TEMPLATE_ROOT+'index.html',context)
-    def feeder(self,request,*args, **kwargs):
-        user=request.user
-        context=getContext(request)
-        feeder=FeederRepo(user=user).feeder(*args, **kwargs)
-        context['feeder']=feeder
-        
-        
- 
-        return render(request,TEMPLATE_ROOT+'feeder.html',context)
     
     def node(self,request,pk,*args, **kwargs):
         user=request.user

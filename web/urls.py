@@ -8,12 +8,11 @@ urlpatterns = [
     path('bus_monitoring/<int:bus_id>/',login_required(views.BasicViews().monitoring),name="bus_monitoring"),
     path('com_server/<int:pk>/',views.ComServerViews().com_server,name="comserver"),
     path('node/<int:pk>/',views.BasicViews().node,name="node"),
-    path('feeder/<int:pk>/',views.BasicViews().feeder,name="feeder"),
+    path('feeder/<int:pk>/',views.FeederViews().feeder,name="feeder"),
     path('bus/<int:pk>/',views.BasicViews().bus,name="bus"),
     path('area/<int:pk>/',views.BasicViews().area,name="area"),
     path('logs/',views.BasicViews().logs,name="logs"),
-    path('get_feeder_data/',apis.BasicApi().get_feeder_data,name="get_feeder_data"),
-    path('get_feeder_data/<int:pk>/',apis.BasicApi().get_feeder_data,name="get_feeder_data_get"),
+    path('get_feeder/',apis.FeederApi().get_feeder,name="get_feeder"),
     path('monitoring/',login_required(views.BasicViews().monitoring),name="monitoring"),
     path('demo/',views.BasicViews().demo,name="demo"),
     path('logs/',login_required(views.BasicViews().logs),name="logs"),
@@ -25,6 +24,5 @@ urlpatterns = [
     path('circuit_breaker_read/',login_required(apis.BasicApi().circuit_breaker_read),name="circuit_breaker_read"),
     path('add_input_command/',login_required(views.BasicViews().add_input_command),name="add_input_command"),
     path('read_com_server/',login_required(apis.ComServerApi().read_com_server),name="read_com_server"),
-    
 ]
 

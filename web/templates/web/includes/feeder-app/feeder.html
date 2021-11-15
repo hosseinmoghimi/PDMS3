@@ -1,1 +1,24 @@
-2
+<div class="card" id="feeder-app">
+    <div class="card-body">
+        <div>
+
+            <button class="btn btn-info" @click="start()">start</button>
+        </div>
+        <div class="text-left">
+            I a : <span v-text="feeder.i_a"></span> <small>(Amepere)</small>
+         </div>
+
+         <div class="text-left">
+            I b : <span v-text="feeder.i_b"></span> <small>(Amepere)</small>
+         </div>
+
+         <div class="text-left">
+            I c : <span v-text="feeder.i_c"></span> <small>(Amepere)</small>
+         </div>
+
+        <div class="text-left">
+
+            <img :src="feeder.circuit_breaker_schematic" width="96" :alt="feeder.circuit_breaker_status">
+        </div>
+    </div>
+</div>

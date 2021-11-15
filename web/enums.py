@@ -9,6 +9,11 @@ class VoltageLevelEnum(TextChoices):
 class ComServerRedundancyEnum(TextChoices):
     HOT='HOT',_('HOT')
     STAND_BY='STAND_BY',_('STAND_BY')
+class InputOutputStatusEnum(TextChoices):
+    DISCONNECTED='DISCONNECTED',_('DISCONNECTED')
+    SUCCESSFULL='SUCCESSFULL',_('SUCCESSFULL')
+    FAILED='FAILED',_('FAILED')
+    INVALID='INVALID',_('INVALID')
 
 class LogStatusEnum(TextChoices):
     ENABLED='ENABLE',_('ENABLE')

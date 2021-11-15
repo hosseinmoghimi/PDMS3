@@ -5,7 +5,7 @@
         data: {
             com_server_id: com_server_id,
             address: 1,
-            count: 1,
+            count: 25,
             values: [],
             succeed: false,
             failed: false,
@@ -30,6 +30,11 @@
                     setTimeout(() => {
                         com_server_app.failed = false
                     }, 5000);
+                })
+                posting.fail((error) => {
+                    console.log(error)
+                    com_server_app.waiting = false
+
                 })
                 posting.done((data) => {
                     com_server_app.waiting = false

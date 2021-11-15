@@ -24,5 +24,5 @@ class ReadCircuitBreakerForm(forms.Form):
 class ToggleCircuitBreakerForm(forms.Form):
     cb_id=forms.IntegerField(required=True)
     command=forms.CharField(max_length=50,required=False)
-class GetFeederDataForm(forms.Form):
+class GetFeederForm(forms.Form):
     feeder_id=forms.IntegerField(required=True)
