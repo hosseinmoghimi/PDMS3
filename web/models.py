@@ -99,6 +99,12 @@ class Feeder(models.Model):
     i_b=models.IntegerField(_("I b"),null=True,blank=True)
     i_c=models.IntegerField(_("I c"),null=True,blank=True)
     class_name="feeder"
+
+    def current_transformer(self):
+        ct=CurrentTransformer()
+        ct.feeder=self
+        ct.update_data()
+        return ct
     def update_circuit_breaker_status(self):
         status=CircuitBreakerStatusEnum.FAILED
         try:
@@ -139,10 +145,10 @@ class Feeder(models.Model):
         if status==CircuitBreakerStatusEnum.CLOSE and not self.bus.is_live:
             return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close-bus-dead.png'
 
-        if status==CircuitBreakerStatusEnum.FAILED:
-            return f'{STATIC_URL}{APP_NAME}/img/CB-FAILED.png'
+        if status==CircuitBreakerStatusEnum.FAILED :
+            return f'{STATIC_URL}{APP_NAME}/img/cb-failed.png'
         if status==CircuitBreakerStatusEnum.TESTING:
-            return f'{STATIC_URL}{APP_NAME}/img/CB-TESTING.jpg'
+            return f'{STATIC_URL}{APP_NAME}/img/cb-testing.png'
     def panel(self):
         # return ""
         components_panels=""
@@ -364,3 +370,35 @@ class Log(models.Model):
 
     def get_absolute_url(self):
         return reverse(APP_NAME+":log", kwargs={"pk": self.pk})
+
+class CurrentTransformer(models.Model):
+    feeder=models.ForeignKey("feeder", verbose_name=_("feeder"), on_delete=models.CASCADE)
+    data_i_a=[]
+    data_i_b=[]
+    data_i_c=[]
+    data1=56
+    def value_i_a(self):
+        return self.data_i_a[0].value()
+    def value_i_a(self):
+        return self.data_i_b[0].value()
+    def value_i_a(self):
+        return self.data_i_c[0].value()
+    class Meta:
+        verbose_name = _("CurrentTransformer")
+        verbose_name_plural = _("CurrentTransformers")
+
+    def __str__(self):
+        return self.feeder.name+":ct"
+ 
+    def update_data(self):
+        self.data_i_a=AnalogInput.objects.filter(com_server=self.feeder.com_server).filter(register=self.feeder.address+self.feeder.register_ct_i_a).order_by('-date_added')
+        self.data_i_b=AnalogInput.objects.filter(com_server=self.feeder.com_server).filter(register=self.feeder.address+self.feeder.register_ct_i_b).order_by('-date_added')
+        self.data_i_c=AnalogInput.objects.filter(com_server=self.feeder.com_server).filter(register=self.feeder.address+self.feeder.register_ct_i_c).order_by('-date_added')
+    
+    def value_i_a(self):
+        return self.data_i_a.first().value()
+    def value_i_b(self):
+        return self.data_i_b.first().value()
+    def value_i_c(self):
+        return self.data_i_c.first().value()
+    

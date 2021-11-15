@@ -32,6 +32,17 @@
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                         feeder_app.feeder = data.feeder
+                        let value = {
+                            i_a: data.feeder.i_a,
+                            i_b: data.feeder.i_b,
+                            i_c: data.feeder.i_c,
+                        }
+                        console.log(data.feeder)
+                        console.log(value)
+                        current_transformer_app.values.reverse()
+                        current_transformer_app.values.push(value)
+                        current_transformer_app.values.reverse()
+                        current_transformer_app.update_values()
                     }
                 })
             }

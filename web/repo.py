@@ -47,7 +47,7 @@ class ComServerRepo:
                 ai.com_server=com_server
                 ai.status=InputOutputStatusEnum.INVALID
                 ai.status=InputOutputStatusEnum.SUCCESSFULL
-                ai.origin_value=str(random.randint(310,330))
+                ai.origin_value=str(random.randint(100,350))
                 # print(ai.origin_value)
                 # print(10*"#@#$")
                 ai.save()

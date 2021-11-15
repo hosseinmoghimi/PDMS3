@@ -34,6 +34,8 @@ class FeederApi(APIView):
             if get_feeder_form.is_valid():
                 feeder_id=get_feeder_form.cleaned_data['feeder_id']
                 feeder=FeederRepo(request=request).feeder(feeder_id=feeder_id)
+                ComServerRepo(request=request).read(address=feeder.address,count=25,com_server_id=feeder.com_server_id)
+
                 if feeder is not None:
                     feeder.update_data()
                     context['feeder']=FeederFullSerializer(feeder).data

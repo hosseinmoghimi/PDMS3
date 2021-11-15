@@ -2,7 +2,7 @@ import json
 from django.http.response import Http404
 
 from core.views import CoreContext
-from web.serializers import AreaSerializer, BusSerializer, FeederFullSerializer, FeederSerializer, FeederSerializerForChart
+from web.serializers import AreaSerializer, BusSerializer, CurrentTransformerSerializer, FeederFullSerializer, FeederSerializer, FeederSerializerForChart
 from .apps import APP_NAME
 from .forms import *
 from .repo import AreaRepo, BusRepo,ComServerRepo, FeederRepo
@@ -30,11 +30,17 @@ class FeederViews(View):
     def feeder(self,request,*args, **kwargs):
         user=request.user
         context=getContext(request)
-        feeder=FeederRepo(user=user).feeder(*args, **kwargs)
+        feeder_repo=FeederRepo(user=user)
+        feeder=feeder_repo.feeder(*args, **kwargs)
         context['feeder']=feeder
         feeder.update_circuit_breaker_status()
         feeder_s=json.dumps(FeederFullSerializer(feeder).data)
         context['feeder_s']=feeder_s
+
+        current_transformer=feeder.current_transformer()
+        current_transformers=feeder.current_transformer()
+        context['current_transformer']=current_transformer
+        context['current_transformer_s']=json.dumps(CurrentTransformerSerializer(current_transformer).data)
         return render(request,TEMPLATE_ROOT+'feeder.html',context)
 
 
