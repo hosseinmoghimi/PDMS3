@@ -32,6 +32,9 @@
         el: "#current-transformer-app",
         data: {
             values: [],
+            values_i_a: [],
+            values_i_b: [],
+            values_i_c: [],
             current_transformer: current_transformer,
             i_a: 190,
             i_b: 170,
@@ -54,7 +57,7 @@
                     gauge_a.set(this.i_a); // set actual value
 
 
-                    
+
 
                     console.log("aaaaa 11111 ")
                     var target_b = document.getElementById("canvas-current-transformer-b")
@@ -66,7 +69,7 @@
 
 
 
-                    
+
                     console.log("aaaaa 11111 ")
                     var target_c = document.getElementById("canvas-current-transformer-c")
                     var gauge_c = new Gauge(target_c).setOptions(opts); // create sexy gauge!
@@ -77,9 +80,9 @@
 
 
 
-                    
 
-                   
+
+
 
 
 
@@ -103,4 +106,73 @@
             },
         }
     })
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script>
+
+    var xValues = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+    function drawLinearChart() {
+
+        new Chart("linear-chart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: current_transformer_app.values_i_a.slice(0, 10),
+                    borderColor: "red",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_b.slice(0, 10),
+                    borderColor: "green",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_c.slice(0, 10),
+                    borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+
+
+        // Bar chart
+        new Chart(document.getElementById("line-chart"), {
+            type: 'line',
+            data: {
+                labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+                datasets: [{
+                    data: current_transformer_app.values_i_a.slice(0, 10),
+                    label: "Africa",
+                    borderColor: "#3e95cd",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_b.slice(0, 10),
+                    label: "Asia",
+                    borderColor: "#8e5ea2",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_c.slice(0, 10),
+                    label: "Europe",
+                    borderColor: "#3cba9f",
+                    fill: false
+                },
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'World population per region (in millions)'
+                }
+            }
+        });
+
+
+
+    }
+
 </script>

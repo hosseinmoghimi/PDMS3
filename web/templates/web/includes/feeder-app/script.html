@@ -37,12 +37,28 @@
                             i_b: data.feeder.i_b,
                             i_c: data.feeder.i_c,
                         }
-                        console.log(data.feeder)
-                        console.log(value)
                         current_transformer_app.values.reverse()
                         current_transformer_app.values.push(value)
                         current_transformer_app.values.reverse()
                         current_transformer_app.update_values()
+                        drawLinearChart()
+
+                        current_transformer_app.values_i_a.reverse()
+                        current_transformer_app.values_i_a.push(data.feeder.i_a)
+                        current_transformer_app.values_i_a.reverse()
+
+
+
+                        current_transformer_app.values_i_b.reverse()
+                        current_transformer_app.values_i_b.push(data.feeder.i_b)
+                        current_transformer_app.values_i_b.reverse()
+
+
+
+                        current_transformer_app.values_i_c.reverse()
+                        current_transformer_app.values_i_c.push(data.feeder.i_c)
+                        current_transformer_app.values_i_c.reverse()
+
                     }
                 })
             }
