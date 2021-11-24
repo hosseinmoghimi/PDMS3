@@ -75,7 +75,7 @@
             feeders.forEach(feeder => {
                 // console.log(element)
                 id = feeder.id.toString(10)
-                caption = feeder.panel,
+                caption = feeder.panel_for_bus_view,
                     manager = feeder.bus.id ? ("b" + feeder.bus.id.toString(10)) : null
                 tooltip = 'feeder'
                 data.addRow([{ 'v': id, 'f': caption }, manager, tooltip])
@@ -105,11 +105,16 @@
 </head>
 
 <body style="background-color: #74a5bd;" id="app">
-    <div style="">
+
+
+
+
+
+    <div  >
         <a href="{% url 'web:home' %}">Home</a>
     </div>
 
-    <div style="">
+    <div >
         <a href="{% url 'web:home' %}">Home</a>
     </div>
 
@@ -148,7 +153,7 @@
                 cb();
                 timer(cb);
 
-            }, monitoring_app.refresh_delay * 1000);
+            }, monitoring_app.refresh_delay_ms );
         }
         var callback = function () {
             // try {
@@ -183,7 +188,7 @@
         let monitoring_app = new Vue({
             el: "#app",
             data: {
-                refresh_delay: 5,
+                refresh_delay_ms: 2000,
                 feeders: feeders,
                 buses: buses,
             },

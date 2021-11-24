@@ -2,7 +2,14 @@
 {% load static %}
 
 {% block content %}
-<h3 class="text-left"> {{feeder.name}}</h3>
+<h3 class="text-left"> {{feeder.name}}
+{% if perms.web.change_feeder %}
+  <a href="{{feeder.get_edit_url}}" target="_blank" class="mx-2" title="Edit {{feeder.name}}">
+      <i class="fa fa-edit"></i>
+  </a>
+{% endif %}
+
+</h3>
 <div class="row">
     <div class="col-md-4">
         <div class="card">

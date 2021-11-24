@@ -1,7 +1,7 @@
 <div class="card" id="feeder-app">
     <div class="card-body">
         <div>
-
+<input type="number" placeholder="Refresh interval in ms" class="form-control" v-model="refresh_interval" min="1000" >
             <button class="btn btn-info" @click="start()">start</button>
         </div>
         <div class="text-left">
