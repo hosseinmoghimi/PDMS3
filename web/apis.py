@@ -34,7 +34,7 @@ class FeederApi(APIView):
             if get_feeder_form.is_valid():
                 feeder_id=get_feeder_form.cleaned_data['feeder_id']
                 feeder=FeederRepo(request=request).feeder(feeder_id=feeder_id)
-                ComServerRepo(request=request).read(address=feeder.address,count=25,com_server_id=feeder.com_server_id)
+                # ComServerRepo(request=request).read(address=feeder.address,count=25,com_server_id=feeder.com_server_id)
 
                 if feeder is not None:
                     feeder.update_data()
@@ -84,12 +84,10 @@ class BasicApi(APIView):
             if get_bus_data_form.is_valid():
                 bus_id=get_bus_data_form.cleaned_data['bus_id']
                 feeders=FeederRepo(user=request.user).list(bus_id=bus_id)
-                for feeder in feeders:
-                    feeder.circuit_breaker.get_value(request)
                 bus=BusRepo(user=request.user).bus(pk=bus_id)
                 context['feeders']=FeederSerializerForChart(feeders,many=True).data
                 context['bus']=BusSerializer(bus).data
-                context['result']=CoreConstants.SUCCEED
+                context['result']=SUCCEED
         return JsonResponse(context)
     def get_feeder_data(self,request,*args, **kwargs):
         user=request.user

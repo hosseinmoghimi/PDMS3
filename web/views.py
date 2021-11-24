@@ -144,7 +144,7 @@ class BasicViews(View):
         if 'bus_id' in kwargs:
             bus_id=kwargs['bus_id']        
             buses=BusRepo(user=user).list().filter(pk=bus_id)
-            feeders=FeederRepo(request.user).list().filter(bus=buses.first())
+            feeders=FeederRepo(request.user).list(bus_id=bus_id)
         else:
             buses=BusRepo(user=user).list(*args, **kwargs)
             feeders=FeederRepo(request.user).list()
@@ -159,3 +159,6 @@ class BasicViews(View):
         context['bus_color']=buses.first().get_color()
 
         return render(request,TEMPLATE_ROOT+'monitoring.html',context)
+
+        
+        

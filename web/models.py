@@ -3,7 +3,7 @@ from django.forms.fields import CharField
 from django.shortcuts import reverse
 from django.utils.translation import gettext as _
 
-from pdms.server_settings import STATIC_URL
+from pdms.server_settings import COM_SERVER_IS_CONNECTED, STATIC_URL
 from .constants import *
 from .enums import CircuitBreakerStatusEnum, ComServerRedundancyEnum, InputOutputStatusEnum,LogStatusEnum, VoltageLevelEnum
 from .settings import ADMIN_URL
@@ -67,7 +67,7 @@ class Feeder(models.Model):
     bus=models.ForeignKey("bus", verbose_name=_("bus"), on_delete=models.CASCADE)
     address=models.IntegerField(_("address"),default=0)
     com_server=models.ForeignKey("comserver", verbose_name=_("com_server"), on_delete=models.CASCADE)
-
+    priority=models.IntegerField(_("priority"),default=100)
     
     register_cb_open=models.IntegerField(_("register_cb_open"),default=REGISTER_CIRCUIT_BREAKER_OPEN)
     register_cb_close=models.IntegerField(_("register_cb_close"),default=REGISTER_CIRCUIT_BREAKER_CLOSE)
@@ -94,7 +94,7 @@ class Feeder(models.Model):
     register_s=models.IntegerField(_("register s"),default=REGISTER_S)
 
 
-    circuit_breaker_status=models.CharField(_("circuit_breaker_status"),choices=CircuitBreakerStatusEnum.choices, max_length=50)
+    circuit_breaker_status=models.CharField(_("circuit_breaker_status"),choices=CircuitBreakerStatusEnum.choices,default=CircuitBreakerStatusEnum.TESTING, max_length=50)
     i_a=models.IntegerField(_("I a"),null=True,blank=True)
     i_b=models.IntegerField(_("I b"),null=True,blank=True)
     i_c=models.IntegerField(_("I c"),null=True,blank=True)
@@ -103,8 +103,9 @@ class Feeder(models.Model):
     def current_transformer(self):
         ct=CurrentTransformer()
         ct.feeder=self
-        ct.update_data()
+        # ct.update_data()
         return ct
+    
     def update_circuit_breaker_status(self):
         status=CircuitBreakerStatusEnum.FAILED
         try:
@@ -127,13 +128,42 @@ class Feeder(models.Model):
         status=CircuitBreakerStatusEnum.choices[random.randint(0,3)][0]
         self.circuit_breaker_status=status
         return status
-            
+    
+    def create_sample_date_analog_input(self):
+        import random
+        registers=[
+            self.register_ct_i_a,
+            self.register_ct_i_b,
+            self.register_ct_i_c,
+
+            self.register_vt_v_a,
+            self.register_vt_v_b,
+            self.register_vt_v_c,
+
+        ]
+        for register in registers:
+            ai=AnalogInput()
+            ai.register=self.address+register
+            ai.com_server=self.com_server
+            ai.status=InputOutputStatusEnum.INVALID
+            ai.status=InputOutputStatusEnum.SUCCESSFULL
+            ai.origin_value=str(random.randint(100,350))
+            # print(ai.origin_value)
+            # print(10*"#@#$")
+            ai.save()
+     
     def update_data(self):
+        if not COM_SERVER_IS_CONNECTED:
+            self.create_sample_date_analog_input()
         self.update_circuit_breaker_status()
-        self.i_a=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_a).order_by('-date_added').first().value()
-        self.i_b=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_b).order_by('-date_added').first().value()
-        self.i_c=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_c).order_by('-date_added').first().value()
+        ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_a).order_by('-date_added').first()
+        self.i_a=0 if ai is None else ai.value()
+        ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_b).order_by('-date_added').first()
+        self.i_b=0 if ai is None else ai.value()
+        ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_c).order_by('-date_added').first()
+        self.i_c=0 if ai is None else ai.value()
         self.save()
+    
     def circuit_breaker_schematic(self):
         status=self.circuit_breaker_status
         if status==CircuitBreakerStatusEnum.OPEN and self.bus.is_live:
@@ -149,10 +179,58 @@ class Feeder(models.Model):
             return f'{STATIC_URL}{APP_NAME}/img/cb-failed.png'
         if status==CircuitBreakerStatusEnum.TESTING:
             return f'{STATIC_URL}{APP_NAME}/img/cb-testing.png'
+       
+    def earth_schematic(self):
+        status=self.circuit_breaker_status
+        if status==CircuitBreakerStatusEnum.OPEN and self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open.png'
+        if status==CircuitBreakerStatusEnum.CLOSE and self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close.png'
+        if status==CircuitBreakerStatusEnum.OPEN and not self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open-bus-dead.png'
+        if status==CircuitBreakerStatusEnum.CLOSE and not self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close-bus-dead.png'
+
+        if status==CircuitBreakerStatusEnum.FAILED :
+            return f'{STATIC_URL}{APP_NAME}/img/cb-failed.png'
+        if status==CircuitBreakerStatusEnum.TESTING:
+            return f'{STATIC_URL}{APP_NAME}/img/cb-testing.png'
+    
+    def parameters_schematic(self):
+        return f"""
+        <div>
+            <h5>I a = {self.i_a}</h5>
+            <h5>I b = {self.i_b}</h5>
+            <h5>I c = {self.i_c}</h5>
+        </div>
+        """
+       
     def panel(self):
         # return ""
         components_panels=""
         components_panels+=f"""<div><img src="{self.circuit_breaker_schematic()}" width="100"></div>"""
+        # components_panels+=self.current_transformer.panel()
+        return f"""
+            <div>
+            
+            {components_panels}
+            <h3>
+            <a href="{self.get_absolute_url()}">
+            
+            {self.name}
+            </a>
+            </h3>
+            </div>
+        """
+    
+    def panel_for_bus_view(self):
+        self.update_data()
+        # return ""
+        components_panels=""
+        components_panels+=f"""<div><a href="{self.get_absolute_url()}" target="_blank">{self.name}</a>"""
+        components_panels+=f"""<div><img src="{self.circuit_breaker_schematic()}" width="100"></div>"""
+        components_panels+=f"""<div><img src="{self.earth_schematic()}" width="100"></div>"""
+        components_panels+=self.parameters_schematic()
         # components_panels+=self.current_transformer.panel()
         return f"""
             <div>
@@ -173,8 +251,10 @@ class Feeder(models.Model):
 
     def __str__(self):
         return self.name
+    
     def area(self):
         return self.bus.area
+    
     def get_absolute_url(self):
         return reverse(APP_NAME+":"+self.class_name, kwargs={"pk": self.pk})
 
@@ -192,6 +272,7 @@ class Bus(models.Model):
     model_name=models.CharField(_("model_name"),null=True,blank=True, max_length=5000)
     serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=5000)
     description=models.CharField(_("description"),null=True,blank=True, max_length=5000)
+    voltage=models.IntegerField(_("voltage"))
     is_live=models.BooleanField(_("is live ?"),default=True)
     class_name="bus"
     def panel(self):
@@ -202,6 +283,8 @@ class Bus(models.Model):
         </a>
         </div>
         """
+    def __str__(self):
+        return self.name
     def save(self):
         self.child_class="bus"
         super(Bus,self).save()
@@ -280,7 +363,7 @@ class Permission(models.Model):
 class AnalogInput(InputOutput):
     def value(self):
         if self.origin_value is None:
-            return None
+            return 0
         return int(self.origin_value) 
     
     class Meta:
@@ -373,16 +456,7 @@ class Log(models.Model):
 
 class CurrentTransformer(models.Model):
     feeder=models.ForeignKey("feeder", verbose_name=_("feeder"), on_delete=models.CASCADE)
-    data_i_a=[]
-    data_i_b=[]
-    data_i_c=[]
-    data1=56
-    def value_i_a(self):
-        return self.data_i_a[0].value()
-    def value_i_a(self):
-        return self.data_i_b[0].value()
-    def value_i_a(self):
-        return self.data_i_c[0].value()
+     
     class Meta:
         verbose_name = _("CurrentTransformer")
         verbose_name_plural = _("CurrentTransformers")
@@ -390,15 +464,11 @@ class CurrentTransformer(models.Model):
     def __str__(self):
         return self.feeder.name+":ct"
  
-    def update_data(self):
-        self.data_i_a=AnalogInput.objects.filter(com_server=self.feeder.com_server).filter(register=self.feeder.address+self.feeder.register_ct_i_a).order_by('-date_added')
-        self.data_i_b=AnalogInput.objects.filter(com_server=self.feeder.com_server).filter(register=self.feeder.address+self.feeder.register_ct_i_b).order_by('-date_added')
-        self.data_i_c=AnalogInput.objects.filter(com_server=self.feeder.com_server).filter(register=self.feeder.address+self.feeder.register_ct_i_c).order_by('-date_added')
-    
+ 
     def value_i_a(self):
-        return self.data_i_a.first().value()
+        return self.feeder.i_a
     def value_i_b(self):
-        return self.data_i_b.first().value()
+        return self.feeder.i_b
     def value_i_c(self):
-        return self.data_i_c.first().value()
+        return self.feeder.i_c
     

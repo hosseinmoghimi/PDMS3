@@ -57,7 +57,7 @@ class FeederSerializerForChart(serializers.ModelSerializer):
 
     class Meta:
         model = Feeder
-        fields = ['id', 'name', 'bus', 'panel',
+        fields = ['id', 'name', 'bus', 'panel','panel_for_bus_view',
                   'address',  'com_server', 'get_edit_url']
 class CurrentTransformerSerializer(serializers.ModelSerializer):
     class Meta:

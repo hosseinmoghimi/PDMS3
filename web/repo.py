@@ -38,21 +38,9 @@ class ComServerRepo:
             leo_modbus=LeoModbus(request=self.request)
             leo_modbus.connect(host=com_server.ip1,port=com_server.port1)
             values=leo_modbus.read_holding_registers(address=address,count=count)
+        else:
+            pass
         register=address
-        if values is None:
-            import random
-            for i in range(count):
-                ai=AnalogInput()
-                ai.register=register
-                ai.com_server=com_server
-                ai.status=InputOutputStatusEnum.INVALID
-                ai.status=InputOutputStatusEnum.SUCCESSFULL
-                ai.origin_value=str(random.randint(100,350))
-                # print(ai.origin_value)
-                # print(10*"#@#$")
-                ai.save()
-                register+=1
-            return None
         for value in values:
             ai=AnalogInput()
             ai.register=register
@@ -145,12 +133,15 @@ class FeederRepo:
         if 'request' in kwargs:
             self.request=kwargs['request']
             self.user=self.request.user
-        self.objects=Feeder.objects.all()
+        self.objects=Feeder.objects.all().order_by('priority')
     def list(self,*args, **kwargs):
         objects=self.objects
         if 'search_for' in kwargs:
             search_for=kwargs['search_for']
             objects=objects.filter(Q(title__contains=search_for))
+        if 'bus_id' in kwargs:
+            bus_id=kwargs['bus_id']
+            objects=objects.filter(Q(bus_id=bus_id))
         return objects
     def feeder(self,*args, **kwargs):
         pk=0
