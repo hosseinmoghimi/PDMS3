@@ -229,7 +229,7 @@ class Feeder(models.Model):
         components_panels=""
         components_panels+=f"""<div><a href="{self.get_absolute_url()}" target="_blank">{self.name}</a>"""
         components_panels+=f"""<div><img src="{self.circuit_breaker_schematic()}" width="100"></div>"""
-        components_panels+=f"""<div><img src="{self.earth_schematic()}" width="100"></div>"""
+        # components_panels+=f"""<div><img src="{self.earth_schematic()}" width="100"></div>"""
         components_panels+=self.parameters_schematic()
         # components_panels+=self.current_transformer.panel()
         return f"""
