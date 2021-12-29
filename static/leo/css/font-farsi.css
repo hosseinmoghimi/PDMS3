@@ -1,0 +1,37 @@
+@font-face {
+    font-family: "HMFONT";
+    src: url("./ISM.woff2") format("woff2");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "HMFONT";
+    src: url("./ISB.woff2") format("woff2");
+    font-style: normal;
+    font-weight: regular;
+}
+
+
+@font-face {
+    font-family: "HMFONT2";
+    src: url("./Tanha.eot") format("woff2");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "HMFONT2";
+    src: url("../font-farsi/Far_Farnaz.woff") format("woff2");
+    font-style: normal;
+    font-weight: regular;
+}
+@font-face {
+    font-family: "HMFONT3";
+    src: url("../font-farsi/Far_Casablanca.woff") format("woff2");
+    font-style: normal;
+    font-weight: regular;
+}
+.farsi{
+    font-family: "HMFONT" ;
+}

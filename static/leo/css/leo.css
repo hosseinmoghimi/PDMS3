@@ -1,0 +1,14 @@
+label,h1,h2,h3,h4,h5,h6,.form-check{
+direction: rtl !important;
+text-align: right;
+}
+.form-check-sign{
+    direction: ltr !important;
+}
+.rtl{
+    direction: rtl;
+}
+
+.ltr{
+    direction: ltr;
+}
