@@ -62,13 +62,6 @@ WSGI_APPLICATION = 'pdms.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -118,6 +111,7 @@ MEDIA_ROOT = server_settings.MEDIA_ROOT
 STATICFILES_DIRS=server_settings.STATICFILES_DIRS
 
 ADMIN_URL=server_settings.ADMIN_URL
+DATABASES = server_settings.DATABASES
 
 ALLOWED_HOSTS = server_settings.ALLOWED_HOSTS
 

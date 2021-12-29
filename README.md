@@ -62,6 +62,13 @@ MEDIA_ROOT = os.path.join(PUBLIC_ROOT,"media")
 ALLOWED_HOSTS = ['*']
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
 ```
 
 copy and put it in specific file:
