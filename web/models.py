@@ -73,7 +73,7 @@ class Feeder(models.Model):
     register_cb_close=models.IntegerField(_("register_cb_close"),default=REGISTER_CIRCUIT_BREAKER_CLOSE)
     register_cb_test=models.IntegerField(_("register_cb_test"),default=REGISTER_CIRCUIT_BREAKER_TEST)
     register_cb_trip=models.IntegerField(_("register_cb_trip"),default=REGISTER_CIRCUIT_BREAKER_TRIP)
-    register_cb_servive=models.IntegerField(_("register_cb_trip"),default=REGISTER_CIRCUIT_BREAKER_SERVICE)
+    register_cb_servive=models.IntegerField(_("register_cb_servive"),default=REGISTER_CIRCUIT_BREAKER_SERVICE)
     register_cb_spare1=models.IntegerField(_("register_cb_spare1"),default=REGISTER_CIRCUIT_BREAKER_SPARE1)
     register_cb_spare2=models.IntegerField(_("register_cb_spare2"),default=REGISTER_CIRCUIT_BREAKER_SPARE2)
 
