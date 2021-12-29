@@ -41,51 +41,25 @@ python manage.py djecrety
 
 fill and copy this file as /PATH_TO_YOUR_APP_FOLDER/phoenix/settings_server.py
 ```python
-
-DEBUG=True
-# DEBUG=False
-
-
-
-import os
 from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-YEAR_ADDED=0
+import os
+DEBUG=True
+COM_SERVER_IS_CONNECTED=False
+SECRET_KEY = 'django-insecure-2qnnu#vd@82**fu^yoacg6tm#s!-qt+1e+c!#4#@=_19b1&48e'
 
-
-SECRET_KEY='-+(&pe9ld9unwos@077r(cg#_)1$^l0c##+%gpy@&95da$=_hp'
-SITE_URL='/'
-PUSHER_IS_ENABLE=False
-PUBLIC_ROOT=BASE_DIR
-MYSQL=False
-ALLOWED_HOSTS = ['*']
-
-
-
-
-
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db9.sqlite3',
-    # }
-    
-    'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'OPTIONS': {
-                'read_default_file': os.path.join(os.path.join(BASE_DIR, 'phoenix'),'secret_mysql.cnf'),
-
-            },
-        }
-}
-
-TIME_ZONE = 'Asia/Tehran'
-
-STATIC_ROOT=os.path.join(PUBLIC_ROOT,'staticfiles')
-MEDIA_ROOT=os.path.join(PUBLIC_ROOT,'media')
+SITE_URL="/"
 STATIC_URL = SITE_URL+'static/'
-MEDIA_URL =  SITE_URL+'media/'
+MEDIA_URL = SITE_URL+'media/'
+ADMIN_URL = SITE_URL+'admin/'
+
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
+
+PUBLIC_ROOT = os.path.join(BASE_DIR,"public")
+STATIC_ROOT = os.path.join(PUBLIC_ROOT,"staticfiles")
+MEDIA_ROOT = os.path.join(PUBLIC_ROOT,"media")
+
+ALLOWED_HOSTS = ['*']
 
 
 ```
