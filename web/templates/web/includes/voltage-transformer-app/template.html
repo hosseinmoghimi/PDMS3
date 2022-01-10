@@ -1,8 +1,9 @@
-<div id="current-transformer-app">
+<div id="voltage-transformer-app">
+
     <div class="card">
         <div class="card-header">
             <h4 class="text-left mb-3">
-                Current Transformer
+                Voltage Transformer
             </h4>
 
         </div>
@@ -13,24 +14,24 @@
             <div class="row">
                 <div class="col-md-4">
                     <h5 class="text-center">
-                        I a : <span v-text="i_a"></span> <small>(Amepere)</small>
+                        V a : <span v-text="v_a"></span> <small>(Volts)</small>
 
                     </h5>
                     <div class="text-center">
 
-                        <canvas width="400" height="187" id="canvas-current-transformer-a"
+                        <canvas width="400" height="187" id="canvas-voltage-transformer-a"
                             style="width: 380px; height: 150px;"></canvas>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <h5 class="text-center">
-                        I b : <span v-text="i_b"></span> <small>(Amepere)</small>
+                        V b : <span v-text="v_b"></span> <small>(Volts)</small>
 
                     </h5>
                     <div class="text-center">
 
-                        <canvas width="400" height="187" id="canvas-current-transformer-b"
+                        <canvas width="400" height="187" id="canvas-voltage-transformer-b"
                             style="width: 380px; height: 150px;"></canvas>
                     </div>
 
@@ -38,40 +39,50 @@
 
                 <div class="col-md-4">
                     <h5 class="text-center">
-                        I c : <span v-text="i_c"></span> <small>(Amepere)</small>
+                        V c : <span v-text="v_c"></span> <small>(Volts)</small>
 
                     </h5>
                     <div class="text-center">
 
-                        <canvas width="400" height="187" id="canvas-current-transformer-c"
+                        <canvas width="400" height="187" id="canvas-voltage-transformer-c"
                             style="width: 380px; height: 150px;"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="text-left mb-3">
+                Current Transformer
+            </h4>
+
+        </div>
+        <div class="card-body">
+            <div class="text-center">
+
+                <canvas id="voltage-linear-chart" style="width:100%;max-width:800px"></canvas>
+
+            </div>
+
+
+        </div>
+    </div>
+    
     <div class="card">
         <div class="card-header">
             <h4 class="text-left mb-3">
                 Current Transformer
             </h4>
         </div>
+        
         <div class="card-body">
             <div class="text-center">
-                <canvas id="current-linear-chart" style="width:100%;max-width:800px"></canvas>
+                <canvas id="voltage-line-chart" width="800" height="250"></canvas>
             </div>
+
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h4 class="text-left mb-3">
-                Current Transformer
-            </h4>
-        </div>
-        <div class="card-body">
-            <div class="text-center">
-                <canvas id="current-line-chart" width="800" height="250"></canvas>
-            </div>
-        </div>
-    </div>
+
 </div>

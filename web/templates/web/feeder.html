@@ -55,16 +55,24 @@
     <div class="col-md-12">
         {% include "web/includes/current-transformer-app/template.html" %}
     </div>
+    <div class="col-md-12">
+        {% include "web/includes/voltage-transformer-app/template.html" %}
+    </div>
 </div>
 {% endblock %}
 
 {% block script %}
-
+<script>
+    let opts=""
+    let animationSpeed=""
+</script>
 {% include "web/includes/feeder-app/script.html" %}
 {% include "web/includes/current-transformer-app/script.html" %}
+{% include "web/includes/voltage-transformer-app/script.html" %}
 <script>
     $(document).ready(() => {
         current_transformer_app.draw_guage_charts()
+        voltage_transformer_app.draw_guage_charts()
     })
 </script>
 

@@ -29,7 +29,7 @@
                 }
                 let posting = $.post(url, payload)
                 posting.done((data) => {
-                    console.log(data)
+                    // console.log(data.feeder.v_a)
                     if (data.result === 'SUCCEED') {
                         feeder_app.feeder = data.feeder
                         let value = {
@@ -37,11 +37,13 @@
                             i_b: data.feeder.i_b,
                             i_c: data.feeder.i_c,
                         }
+
+
                         current_transformer_app.values.reverse()
                         current_transformer_app.values.push(value)
                         current_transformer_app.values.reverse()
                         current_transformer_app.update_values()
-                        drawLinearChart()
+                        drawCurrentLinearChart()
 
                         current_transformer_app.values_i_a.reverse()
                         current_transformer_app.values_i_a.push(data.feeder.i_a)
@@ -58,6 +60,38 @@
                         current_transformer_app.values_i_c.reverse()
                         current_transformer_app.values_i_c.push(data.feeder.i_c)
                         current_transformer_app.values_i_c.reverse()
+
+
+
+                        // voltage
+                        value = {
+                            v_a: data.feeder.v_a,
+                            v_b: data.feeder.v_b,
+                            v_c: data.feeder.v_c,
+                        }
+
+                        voltage_transformer_app.values.reverse()
+                        voltage_transformer_app.values.push(value)
+                        voltage_transformer_app.values.reverse()
+                        voltage_transformer_app.update_values()
+                        drawVoltageLinearChart()
+
+                        voltage_transformer_app.values_v_a.reverse()
+                        voltage_transformer_app.values_v_a.push(data.feeder.v_a)
+                        voltage_transformer_app.values_v_a.reverse()
+
+
+
+                        voltage_transformer_app.values_v_b.reverse()
+                        voltage_transformer_app.values_v_b.push(data.feeder.v_b)
+                        voltage_transformer_app.values_v_b.reverse()
+
+
+
+                        voltage_transformer_app.values_v_c.reverse()
+                        voltage_transformer_app.values_v_c.push(data.feeder.v_c)
+                        voltage_transformer_app.values_v_c.reverse()
+
 
                     }
                 })

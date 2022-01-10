@@ -47,7 +47,7 @@ class FeederFullSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Feeder
-        fields = ['id', 'name', 'bus_id', 'area', 'address', 'i_a', 'i_b', 'i_c',
+        fields = ['id', 'name', 'bus_id', 'area', 'address', 'i_a', 'i_b', 'i_c','v_a','v_b','v_c',
                   'com_server', 'circuit_breaker_status', 'circuit_breaker_schematic']
 
 

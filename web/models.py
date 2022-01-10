@@ -63,6 +63,8 @@ class ComServer(models.Model):
 
 
 class Feeder(models.Model):
+    current_transformers_ratio=models.IntegerField(_("feeder_current_transformers_ratio") ,default=60)
+    voltage_transformers_ratio=models.IntegerField(_("feeder_voltage_transformers_ratio") ,default=350)
     name=models.CharField(_("name"), max_length=50)
     bus=models.ForeignKey("bus", verbose_name=_("bus"), on_delete=models.CASCADE)
     address=models.IntegerField(_("address"),default=0)
@@ -98,6 +100,11 @@ class Feeder(models.Model):
     i_a=models.IntegerField(_("I a"),null=True,blank=True)
     i_b=models.IntegerField(_("I b"),null=True,blank=True)
     i_c=models.IntegerField(_("I c"),null=True,blank=True)
+
+    v_a=models.IntegerField(_("V a"),null=True,blank=True)
+    v_b=models.IntegerField(_("V b"),null=True,blank=True)
+    v_c=models.IntegerField(_("V c"),null=True,blank=True)
+
     class_name="feeder"
 
     def current_transformer(self):
@@ -131,23 +138,37 @@ class Feeder(models.Model):
     
     def create_sample_date_analog_input(self):
         import random
-        registers=[
+        registers_ct=[
             self.register_ct_i_a,
             self.register_ct_i_b,
             self.register_ct_i_c,
+        ]
+        registers_vt=[
 
             self.register_vt_v_a,
             self.register_vt_v_b,
             self.register_vt_v_c,
 
         ]
-        for register in registers:
+        for register in registers_ct:
             ai=AnalogInput()
             ai.register=self.address+register
             ai.com_server=self.com_server
             ai.status=InputOutputStatusEnum.INVALID
             ai.status=InputOutputStatusEnum.SUCCESSFULL
-            ai.origin_value=str(random.randint(100,350))
+            ai.origin_value=str(random.randint(self.current_transformers_ratio*0.6,self.current_transformers_ratio*0.9))
+            # print(ai.origin_value)
+            # print(10*"#@#$")
+            ai.save()
+
+        
+        for register in registers_vt:
+            ai=AnalogInput()
+            ai.register=self.address+register
+            ai.com_server=self.com_server
+            ai.status=InputOutputStatusEnum.INVALID
+            ai.status=InputOutputStatusEnum.SUCCESSFULL
+            ai.origin_value=str(random.randint(self.voltage_transformers_ratio*0.6,self.voltage_transformers_ratio*0.9))
             # print(ai.origin_value)
             # print(10*"#@#$")
             ai.save()
@@ -155,13 +176,26 @@ class Feeder(models.Model):
     def update_data(self):
         if not COM_SERVER_IS_CONNECTED:
             self.create_sample_date_analog_input()
+
         self.update_circuit_breaker_status()
+        # current transformers
         ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_a).order_by('-date_added').first()
         self.i_a=0 if ai is None else ai.value()
         ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_b).order_by('-date_added').first()
         self.i_b=0 if ai is None else ai.value()
         ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_ct_i_c).order_by('-date_added').first()
         self.i_c=0 if ai is None else ai.value()
+
+
+        # voltage transformers
+        ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_vt_v_a).order_by('-date_added').first()
+        self.v_a=0 if ai is None else ai.value()
+        ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_vt_v_b).order_by('-date_added').first()
+        self.v_b=0 if ai is None else ai.value()
+        ai=AnalogInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_vt_v_c).order_by('-date_added').first()
+        self.v_c=0 if ai is None else ai.value()
+
+
         self.save()
     
     def circuit_breaker_schematic(self):
