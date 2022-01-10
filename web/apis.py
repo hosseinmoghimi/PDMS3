@@ -35,7 +35,20 @@ class FeederApi(APIView):
                 feeder_id=get_feeder_form.cleaned_data['feeder_id']
                 feeder=FeederRepo(request=request).feeder(feeder_id=feeder_id)
                 # ComServerRepo(request=request).read(address=feeder.address,count=25,com_server_id=feeder.com_server_id)
+                address=5
+                count=9
+                com_server_id=feeder.com_server.pk
+                vvvv=ComServerRepo(request=request).read(com_server_id=com_server_id,address=address,count=count)
+                # print("com_server_id")
+                # print(com_server_id)
 
+                # print("address")
+                # print(address)
+                # print("port:")
+                # print(count)
+                # print(vvvv)
+
+                # print(100*"$%$#$")
                 if feeder is not None:
                     feeder.update_data()
                     context['feeder']=FeederFullSerializer(feeder).data
