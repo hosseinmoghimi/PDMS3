@@ -26,3 +26,4 @@ python-resize-image
 django-allauth
 python-dateutil
 pyModbusTCP
+khayyam

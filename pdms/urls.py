@@ -8,9 +8,11 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('web.urls')),
+    # path('web/', include('web.urls')),
     path('core/', include('core.urls')),
     path('accounts/', include('authentication.urls')),
+    path('', include('web2.urls')),
+    path('utility/', include('utility.urls')),
     
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),

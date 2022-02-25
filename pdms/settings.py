@@ -22,8 +22,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'web',
+    'utility',
+    # 'web',
+    'web2',
     'core',
     'authentication',
 ]
@@ -114,8 +115,11 @@ ADMIN_URL=server_settings.ADMIN_URL
 DATABASES = server_settings.DATABASES
 
 ALLOWED_HOSTS = server_settings.ALLOWED_HOSTS
-
-
+EMAIL_PORT = server_settings.EMAIL_PORT
+EMAIL_HOST_USER=server_settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD=server_settings.EMAIL_HOST_PASSWORD
+EMAIL_HOST=server_settings.EMAIL_HOST
+SEND_EMAIL=server_settings.SEND_EMAIL
 
 
 

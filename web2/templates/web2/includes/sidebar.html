@@ -1,0 +1,92 @@
+<li class="nav-item ">
+    <a class="nav-link docs-creator" data-toggle="collapse" href="#pagesExamples">
+        <i class="material-icons">image</i>
+        <p> Monitoring
+            <b class="caret"></b>
+        </p>
+    </a>
+    <div class="collapse show" id="pagesExamples">
+        <ul class="nav">
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="{% url 'web2:home' %}">
+                    <span class="sidebar-mini"> H </span>
+                    <span class="sidebar-normal"> Home </span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="{% url 'web2:read' %}">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal"> Read </span>
+                </a>
+            </li>
+            {% if perms.web.change_comserver %}
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="{{ADMIN_URL}}">
+                    <span class="sidebar-mini"> A </span>
+                    <span class="sidebar-normal"> Admin </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="{% url 'web2:monitoring' %}">
+                    <span class="sidebar-mini"> M </span>
+                    <span class="sidebar-normal"> monitoring </span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="{% url 'web2:logs' %}">
+                    <span class="sidebar-mini"> LG </span>
+                    <span class="sidebar-normal"> Logs </span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="{% url 'web2:data' %}">
+                    <span class="sidebar-mini"> DT </span>
+                    <span class="sidebar-normal"> Data </span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="../examples/pages/timeline.html">
+                    <span class="sidebar-mini"> T </span>
+                    <span class="sidebar-normal"> Timeline </span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="../examples/pages/login.html">
+                    <span class="sidebar-mini"> LP </span>
+                    <span class="sidebar-normal"> Login Page </span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="../examples/pages/register.html">
+                    <span class="sidebar-mini"> RP </span>
+                    <span class="sidebar-normal"> Register Page </span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="../examples/pages/lock.html">
+                    <span class="sidebar-mini"> LSP </span>
+                    <span class="sidebar-normal"> Lock Screen Page </span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="../examples/pages/user.html">
+                    <span class="sidebar-mini"> UP </span>
+                    <span class="sidebar-normal"> User Profile </span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link docs-creator" href="../examples/pages/error.html">
+                    <span class="sidebar-mini"> E </span>
+                    <span class="sidebar-normal"> Error Page </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
+
+

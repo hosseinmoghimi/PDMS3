@@ -1,0 +1,131 @@
+{% extends "web2/layout.html" %}
+{% load static %}
+
+
+
+
+
+
+{% block content %}
+
+<div class="row" id="app">
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <form @submit.prevent="get_data">
+                    <div>
+
+                        <input type="text" placeholder="host" v-model="host" class="form-control">
+                    </div>
+                    <div>
+                        <input type="number" placeholder="port" v-model="port" class="form-control">
+
+                    </div>
+                    <div>
+                        <input type="number" placeholder="address" v-model="address" class="form-control">
+
+                    </div>
+                    <div>
+                        <input type="number" placeholder="count" v-model="count" class="form-control">
+
+                    </div>
+                    <div>
+                        <button class="btn btn-success">
+                            POST
+                        </button>
+                    </div>
+
+                </form>
+                <div class="mb-3">
+
+                    <div v-for="value in result">
+
+                        <span v-text="value"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <form @submit.prevent="get_feeder_data">                    
+                    <div>
+                        <input type="number" placeholder="feeder_id" v-model="feeder_id" class="form-control">
+
+                    </div>
+                    <div>
+                        <button class="btn btn-success">
+                            POST
+                        </button>
+                    </div>
+
+                </form>
+                <div class="mb-3">
+
+                    <div v-text="feeder_result">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+{% block script %}
+<script src="{% static 'vendor/js/vue.min.js' %}"></script>
+<script>
+    let app = new Vue({
+        el: "#app",
+        data: {
+            host: "192.168.1.254",
+            port: 502,
+            address: 0,
+            count: 8,
+            result: [],
+            feeder_data: "",
+        },
+        methods: {
+            get_data: function () {
+                let url = "{% url 'web2:get_analog_data' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    host: this.host,
+                    port: this.port,
+                    address: this.address,
+                    count: this.count,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    app.result = []
+                    data.data.forEach(value => {
+                        app.result.push(value)
+                    });
+                })
+            },
+            get_feeder_data: function () {
+                let url = "{% url 'web2:get_feeder_data' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    feeder_id: this.feeder_id,
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    app.feeder_data = data.feeder
+                })
+            },
+        }
+    })
+</script>
+{% endblock %}

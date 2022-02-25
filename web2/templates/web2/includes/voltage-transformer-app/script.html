@@ -1,0 +1,170 @@
+{% load static %}
+<script src="{% static 'vendor/js/gauge/gauge.min.js' %}"></script>
+<script>
+
+    let feeder_voltage_transformers_ratio = parseInt("{{feeder.voltage_transformers_ratio}}")
+    opts = {
+        angle: 0.15, // The span of the gauge arc
+        lineWidth: 0.44, // The line thickness
+        radiusScale: 1, // Relative radius
+        pointer: {
+            length: 0.6, // // Relative to gauge radius
+            strokeWidth: 0.035, // The thickness
+            color: '#000000' // Fill color
+        },
+        limitMax: false,     // If false, max value increases automatically if value > maxValue
+        limitMin: false,     // If true, the min value of the gauge will be fixed
+        colorStart: '#6FADCF',   // Colors
+        colorStop: '#8FC0DA',    // just experiment with them
+        strokeColor: '#E0E0E0',  // to see which ones work best for you
+        generateGradient: true,
+        highDpiSupport: true,     // High resolution support
+        percentColors: [[0.0, "#a9d70b"], [0.50, "#f9c802"], [1.0, "#ff0000"]],
+
+    };
+
+
+    let voltage_transformer = "{{voltage_transformer_s|escapejs}}"
+
+    animationSpeed = 10
+
+    let voltage_transformer_app = new Vue({
+        el: "#voltage-transformer-app",
+        data: {
+            values_v_a: [],
+            values_v_b: [],
+            values_v_c: [],
+            v_a: 190,
+            v_b: 170,
+            v_c: 180,
+            ratio: feeder_voltage_transformers_ratio,
+        },
+        methods: {
+
+            draw_guage_charts: function () {
+                try {
+                    let ratio = this.ratio
+
+                    var target_a = document.getElementById("canvas-voltage-transformer-va")
+                    var gauge_a = new Gauge(target_a).setOptions(opts); // create sexy gauge!
+                    gauge_a.maxValue = ratio; // set max gauge value
+                    gauge_a.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+                    gauge_a.animationSpeed = animationSpeed; // set animation speed (32 is default value)
+                    gauge_a.set(this.v_a); // set actual value
+
+
+
+
+                    var target_b = document.getElementById("canvas-voltage-transformer-vb")
+                    var gauge_b = new Gauge(target_b).setOptions(opts); // create sexy gauge!
+                    gauge_b.maxValue = ratio; // set max gauge value
+                    gauge_b.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+                    gauge_b.animationSpeed = animationSpeed; // set animation speed (32 is default value)
+                    gauge_b.set(this.v_b); // set actual value
+
+
+
+
+                    var target_c = document.getElementById("canvas-voltage-transformer-vc")
+                    var gauge_c = new Gauge(target_c).setOptions(opts); // create sexy gauge!
+                    gauge_c.maxValue = ratio; // set max gauge value
+                    gauge_c.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+                    gauge_c.animationSpeed = animationSpeed; // set animation speed (32 is default value)
+                    gauge_c.set(this.v_c); // set actual value
+
+
+
+
+
+
+
+
+
+                } catch (error) {
+
+                }
+
+            },
+
+            update_values: function (values_REGISTER_V_A, values_REGISTER_V_B, values_REGISTER_V_C) {
+                this.values_v_a = values_REGISTER_V_A
+                this.values_v_b = values_REGISTER_V_B
+                this.values_v_c = values_REGISTER_V_C
+                this.v_a = this.values_v_a[GRAPH_DATA_COUNT - 1]
+                this.v_b = this.values_v_b[GRAPH_DATA_COUNT - 1]
+                this.v_c = this.values_v_c[GRAPH_DATA_COUNT - 1]
+                this.draw_guage_charts()
+                drawVoltageLinearChart()
+            },
+        }
+    })
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script>
+
+    var xValues = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+    function drawVoltageLinearChart() {
+        console.log(voltage_transformer_app.values_v_b)
+        new Chart("voltage-linear-chart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: voltage_transformer_app.values_v_a,
+                    borderColor: "red",
+                    fill: false
+                }, {
+                    data: voltage_transformer_app.values_v_b,
+                    borderColor: "green",
+                    fill: false
+                }, {
+                    data: voltage_transformer_app.values_v_c,
+                    borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+
+
+        // Bar chart
+        new Chart(document.getElementById("voltage-line-chart"), {
+            type: 'line',
+            data: {
+                labels: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+                datasets: [{
+                    data: voltage_transformer_app.values_v_a,
+                    label: "V a",
+                    borderColor: "#3e95cd",
+                    fill: false
+                }, {
+                    data: voltage_transformer_app.values_v_b,
+                    label: "V b",
+                    borderColor: "#8e5ea2",
+                    fill: false
+                }, {
+                    data: voltage_transformer_app.values_v_c,
+                    label: "V c",
+                    borderColor: "#3cba9f",
+                    fill: false
+                },
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Voltage per Feeder (in volts)'
+                }
+            }
+        });
+
+
+
+    }
+
+</script>
