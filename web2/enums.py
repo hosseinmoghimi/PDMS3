@@ -22,6 +22,11 @@ class FeederComponentNameEnum(TextChoices):
     REGISTER_P='REGISTER_P',_('REGISTER_P')
     REGISTER_S='REGISTER_S',_('REGISTER_S')
 
+    REGISTER_CB_OPEN='REGISTER_CB_OPEN',_('REGISTER_CB_OPEN')
+    REGISTER_CB_CLOSE='REGISTER_CB_CLOSE',_('REGISTER_CB_CLOSE')
+    REGISTER_CB_TEST='REGISTER_CB_TEST',_('REGISTER_CB_TEST')
+    REGISTER_CB_TRIP='REGISTER_CB_TRIP',_('REGISTER_CB_TRIP')
+
 class ComServerRedundancyEnum(TextChoices):
     HOT='HOT',_('HOT')
     STAND_BY='STAND_BY',_('STAND_BY')
@@ -50,6 +55,8 @@ class CircuitBreakerStatusEnum(TextChoices):
     CLOSE='CLOSE',_('CLOSE')
     TESTING='TESTING',_('TESTING')
     FAILED='FAILED',_('FAILED')
+    TRIP='TRIP',_('TRIP')
+    SERVICE='SERVICE',_('SERVICE')
 class ComServerOperationCodeEnum(TextChoices):
     READ_COILS='READ_COILS',_('READ_COILS')
     WRITE_SINGEL_COIL='WRITE_SINGEL_COIL',_('WRITE_SINGEL_COIL')

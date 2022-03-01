@@ -4,11 +4,11 @@ from django.shortcuts import reverse
 
 def word_to_int(hex_str,length):
     max1=2**(length-1)
-    print("max : "+str(max1))
-    print("hex_str : "+str(hex_str))
+    # print("max : "+str(max1))
+    # print("hex_str : "+str(hex_str))
     value = int(hex_str, length)
     value = int(hex_str)
-    print("value : "+str(value))
+    # print("value : "+str(value))
     if value > max1:
         value =value-max1*2
     return value

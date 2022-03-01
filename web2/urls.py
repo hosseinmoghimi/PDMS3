@@ -1,10 +1,11 @@
 from django.urls import path
 from .apps import APP_NAME
 from . import views,apis
+
 from django.contrib.auth.decorators import login_required
 app_name=APP_NAME
 urlpatterns = [
-    path('',(views.BasicViews().home),name="home"),
+    path('',login_required(views.BasicViews().home),name="home"),
     path('bus_monitoring/<int:bus_id>/',login_required(views.BasicViews().monitoring),name="bus_monitoring"),
     path('com_server/<int:pk>/',views.ComServerViews().com_server,name="comserver"),
     path('node/<int:pk>/',views.BasicViews().node,name="node"),
@@ -24,6 +25,6 @@ urlpatterns = [
     path('circuit_breaker_toggle/',login_required(apis.BasicApi().circuit_breaker_toggle),name="circuit_breaker_toggle"),
     path('circuit_breaker_read/',login_required(apis.BasicApi().circuit_breaker_read),name="circuit_breaker_read"),
     path('add_input_command/',login_required(views.BasicViews().add_input_command),name="add_input_command"),
-    path('read_com_server/',login_required(apis.ComServerApi().read_com_server),name="read_com_server"),
+    path('read_com_server/',login_required(apis.ComServerApi.as_view),name="read_com_server"),
 ]
 

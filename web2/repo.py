@@ -109,17 +109,38 @@ class ComServerRepo:
                     register+=1
             if com_server_data.code_name==ComServerOperationCodeEnum.READ_COILS:
                 values=leo_modbus.read_coils(start_address,count)
-                print(values)
-                # for value in values:            
-                #     bi=BinaryInput()
-                #     bi.register=register
-                #     bi.com_server=com_server
-                #     bi.origin_value=value
-                #     bi.status=InputOutputStatusEnum.SUCCESSFULL
-                #     bi.save()
-                #     register+=1
+                register=start_address
+                
+                values= [True, False, False, False, False]
+                if values is not None:
+                    for value in values:
+                        feeder=Feeder.objects.filter(com_server=com_server).filter(
+                            
+                            Q(register_cb_open=register) |
+                            Q(register_cb_close=register) |
+                            Q(register_cb_test=register) |
+                            Q(register_cb_trip=register) 
 
-            # leo_modbus.disconnect()
+                        ).first()
+                        if feeder is not None:
+                            cb=BinaryComponent()
+
+                            cb.feeder=feeder
+                            if feeder.register_cb_open==register:
+                                cb.name=FeederComponentNameEnum.REGISTER_CB_OPEN
+                            if feeder.register_cb_close==register:
+                                cb.name=FeederComponentNameEnum.REGISTER_CB_CLOSE
+                            if feeder.register_cb_test==register:
+                                cb.name=FeederComponentNameEnum.REGISTER_CB_TEST
+                            if feeder.register_cb_trip==register:
+                                cb.name=FeederComponentNameEnum.REGISTER_CB_TRIP
+
+                            cb.origin_value=value
+                            if feeder.register_cb_open==register:
+                                cb.origin_value=1
+                            cb.status=InputOutputStatusEnum.SUCCESSFULL
+                            cb.save()
+                        register+=1
             com_server_data.save()
         return values
         

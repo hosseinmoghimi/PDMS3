@@ -7,7 +7,7 @@ from .forms import *
 
 
 class ComServerApi(APIView):
-    def read_com_server(self,request,*args, **kwargs):
+    def post(self,request,*args, **kwargs):
         user=request.user
         context={}
         context['result']=FAILED
@@ -91,7 +91,7 @@ class BasicApi(APIView):
                 cb=CircuitBreakerRepo(user=request.user,request=request).circuit_breaker(pk=cb_id)
                 value=cb.get_value(request=request)
                 context['value']=value
-                print("value: "+str(value))
+                # print("value: "+str(value))
                 context['circuit_breaker']=CircuitBreakerSerializer(cb).data
                 context['circuit_breakers']=CircuitBreakerSerializer(cb.feeder.circuitbreakers(),many=True).data
                 context['result']=CoreConstants.SUCCEED
@@ -155,7 +155,7 @@ class BasicApi(APIView):
                 leo_modbus=LeoModbus(user=request.user)
                 leo_modbus.connect(host=host,port=port)
                 data=leo_modbus.read_holding_registers(address=address,count=count)
-                print(data)
+                # print(data)
                 context['data']=data
                 context['result']=SUCCEED
         return JsonResponse(context)

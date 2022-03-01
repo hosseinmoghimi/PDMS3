@@ -37,7 +37,7 @@ class ComServerDataBlock(models.Model):
         verbose_name = 'ComServerDataBlock'
         verbose_name_plural = 'ComServerDataBlocks'
     def __str__(self):
-        return self.com_server.name + self.persian_date_added()
+        return f"{self.com_server.name}:{self.code_name} {self.start_address}-{self.start_address+self.count}"
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)
     
@@ -132,24 +132,24 @@ class Feeder(models.Model):
     def update_circuit_breaker_status(self):
         status=CircuitBreakerStatusEnum.FAILED
         try:
-            cb_open=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_open).order_by('-date_added').first().value()
-            cb_close=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_close).order_by('-date_added').first().value()
-            cb_test=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_test).order_by('-date_added').first().value()
-            cb_service=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_service).order_by('-date_added').first().value()
-            cb_spare1=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_spare1).order_by('-date_added').first().value()
-            cb_spare2=BinaryInput.objects.filter(com_server=self.com_server).filter(register=self.address+self.register_cb_spare2).order_by('-date_added').first().value()
+            cb_open=BinaryComponent.objects.filter(feeder=self).filter(name=FeederComponentNameEnum.REGISTER_CB_OPEN).order_by('-date_added').first().value()
+            cb_close=BinaryComponent.objects.filter(feeder=self).filter(name=FeederComponentNameEnum.REGISTER_CB_CLOSE).order_by('-date_added').first().value()
+            cb_test=BinaryComponent.objects.filter(feeder=self).filter(name=FeederComponentNameEnum.REGISTER_CB_TEST).order_by('-date_added').first().value()
+            cb_trip=BinaryComponent.objects.filter(feeder=self).filter(name=FeederComponentNameEnum.REGISTER_CB_TRIP).order_by('-date_added').first().value()
             if cb_close:
                 status= CircuitBreakerStatusEnum.CLOSE
             if cb_open:
                 status= CircuitBreakerStatusEnum.OPEN
             if cb_test:
                 status= CircuitBreakerStatusEnum.TESTING
+            if cb_trip:
+                status= CircuitBreakerStatusEnum.TRIP
         except:
             pass    
-        import random
+        # import random
         
-        status=CircuitBreakerStatusEnum.choices[random.randint(0,3)][0]
-        self.circuit_breaker_status=status
+        # status=CircuitBreakerStatusEnum.choices[random.randint(0,3)][0]
+        # self.circuit_breaker_status=status
         return status
     
     def create_sample_date_analog_input(self):
@@ -421,6 +421,13 @@ class FeederComponent(models.Model):
         if self.origin_value is None:
             return False
         return self.origin_value
+    def binary_value(self):
+        if self.origin_value is None:
+            return False
+        if self.origin_value==1:
+            return True
+        if self.origin_value==0:
+            return False 
     
 
 class AnalogComponent(FeederComponent):
@@ -435,4 +442,9 @@ class BinaryComponent(FeederComponent):
     class Meta:
         verbose_name = _("BinaryComponent")
         verbose_name_plural = _("BinaryComponent")
+ 
+ 
+    def __str__(self):
+        return f"""{self.feeder.name} : {self.name}: {self.binary_value()}"""
+ 
  

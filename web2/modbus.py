@@ -27,8 +27,6 @@ class LeoModbus(ModbusClient):
     def connect(self,host,port):
         self.host(host)
         self.port(port)
-        # self.host_address=host
-        # self.port_no=port
         retry=0
         # open or reconnect TCP to server
         while not self.is_open() and retry<RETRY_TO_CONNECT_TIME:
@@ -58,10 +56,10 @@ class LeoModbus(ModbusClient):
                 reg=word_to_int(str(reg),16)
                 self.regs.append(reg)
             
-            print("reg ad #0 to 9: "+str(self.regs))
+            # print("reg ad #0 to 9: "+str(self.regs))
             # if success display registers
             if self.regs:
-                print("reg ad #0 to 9: "+str(self.regs))
+                print(f"registers [{address}-{address+count}] : "+str(self.regs))
                 return self.regs
     def disconnect(self):
         self.close()
@@ -72,7 +70,7 @@ class LeoModbus(ModbusClient):
             self.regs = super(LeoModbus,self).read_coils(address, count)
             # if success display registers
             if self.regs:
-                print("regs: "+str(self.regs))
+                print(f"coils[{address}-{address+count}] : "+str(self.regs))
                 return self.regs
         else:
             if DO_LOG:
