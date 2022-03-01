@@ -116,7 +116,7 @@ class Feeder(models.Model):
     register_s=models.IntegerField(_("register s"),default=REGISTER_S)
 
 
-    circuit_breaker_status=models.CharField(_("circuit_breaker_status"),choices=CircuitBreakerStatusEnum.choices,default=CircuitBreakerStatusEnum.TESTING, max_length=50)
+    circuit_breaker_status=models.CharField(_("circuit_breaker_status"),choices=CircuitBreakerStatusEnum.choices,default=CircuitBreakerStatusEnum.TEST, max_length=50)
     i_a=models.IntegerField(_("I a"),null=True,blank=True)
     i_b=models.IntegerField(_("I b"),null=True,blank=True)
     i_c=models.IntegerField(_("I c"),null=True,blank=True)
@@ -141,15 +141,19 @@ class Feeder(models.Model):
             if cb_open:
                 status= CircuitBreakerStatusEnum.OPEN
             if cb_test:
-                status= CircuitBreakerStatusEnum.TESTING
+                status= CircuitBreakerStatusEnum.TEST
             if cb_trip:
                 status= CircuitBreakerStatusEnum.TRIP
+                
+       
+
         except:
             pass    
         # import random
         
         # status=CircuitBreakerStatusEnum.choices[random.randint(0,3)][0]
-        # self.circuit_breaker_status=status
+        self.circuit_breaker_status=status
+        self.save()
         return status
     
     def create_sample_date_analog_input(self):
@@ -190,20 +194,29 @@ class Feeder(models.Model):
             ai.save()
     
     def circuit_breaker_schematic(self):
+        self.update_circuit_breaker_status()
         status=self.circuit_breaker_status
         if status==CircuitBreakerStatusEnum.OPEN and self.bus.is_live:
             return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open.png'
+        if status==CircuitBreakerStatusEnum.TEST and self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-test.png'
+        if status==CircuitBreakerStatusEnum.TRIP and self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-trip.png'
+        if status==CircuitBreakerStatusEnum.TRIP and not self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-trip-dead.png'
         if status==CircuitBreakerStatusEnum.CLOSE and self.bus.is_live:
             return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close.png'
         if status==CircuitBreakerStatusEnum.OPEN and not self.bus.is_live:
-            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open-bus-dead.png'
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-open-dead.png'
         if status==CircuitBreakerStatusEnum.CLOSE and not self.bus.is_live:
-            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close-bus-dead.png'
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-close-dead.png'
 
-        if status==CircuitBreakerStatusEnum.FAILED :
-            return f'{STATIC_URL}{APP_NAME}/img/cb-failed.png'
-        if status==CircuitBreakerStatusEnum.TESTING:
-            return f'{STATIC_URL}{APP_NAME}/img/cb-testing.png'
+        if status==CircuitBreakerStatusEnum.FAILED and self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-failed.png'
+        if status==CircuitBreakerStatusEnum.FAILED  and not self.bus.is_live:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-failed-dead.png'
+        if status==CircuitBreakerStatusEnum.TEST:
+            return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-test.png'
        
     def earth_schematic(self):
         status=self.circuit_breaker_status
@@ -218,15 +231,15 @@ class Feeder(models.Model):
 
         if status==CircuitBreakerStatusEnum.FAILED :
             return f'{STATIC_URL}{APP_NAME}/img/cb-failed.png'
-        if status==CircuitBreakerStatusEnum.TESTING:
+        if status==CircuitBreakerStatusEnum.TEST:
             return f'{STATIC_URL}{APP_NAME}/img/cb-testing.png'
     
     def parameters_schematic(self):
         return f"""
         <div>
-            <h5>I a = {self.i_a}</h5>
-            <h5>I b = {self.i_b}</h5>
-            <h5>I c = {self.i_c}</h5>
+            <h5>I a = {self.i_a} <small class="text-muted">Ampere</small></h5>
+            <h5>I b = {self.i_b} <small class="text-muted">Ampere</small></h5>
+            <h5>I c = {self.i_c} <small class="text-muted">Ampere</small></h5>
         </div>
         """
        

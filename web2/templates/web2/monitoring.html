@@ -12,6 +12,17 @@
     {% include "web2/includes/monitoring-style.html" %}
 
     <script type="text/javascript" src="/static/charts/loader.js"></script>
+<!-- 
+    <script type="text/javascript" src="/static/charts/loader49/jsapi_compiled_default_module.js"></script>
+    <script type="text/javascript" src="/static/charts/loader49/jsapi_compiled_ui_module.js"></script>
+    <script type="text/javascript" src="/static/charts/loader49/jsapi_compiled_graphics_module.js"></script>
+    <script type="text/javascript" src="/static/charts/loader49/jsapi_compiled_orgchart_module.js"></script> -->
+
+    <link  rel="stylesheet" href="/static/charts/loader49/utils.css">
+    <link  rel="stylesheet" href="/static/charts/loader49/orgchart.css">
+    <link  rel="stylesheet" href="/static/charts/loader49/tooltip.css">
+
+
     <link rel="stylesheet" href="/static/vendor/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/vendor/css/material-icons.css">
 
@@ -19,6 +30,9 @@
     <style>
         a {
             text-decoration: none;
+        }
+        .text-muted{
+            color:#47606d;
         }
     </style>
     <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
@@ -124,7 +138,6 @@
         <h3 style="text-align: center;">Feeders and Buses</h3>
         <h2 style="text-align: center;"></h2>
     </div>
-
     <div id="chart_div">
 
     </div>

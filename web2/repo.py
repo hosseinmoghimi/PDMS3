@@ -77,17 +77,23 @@ class ComServerRepo:
                         ctd.feeder=feeder
                         if feeder.register_ct_i_a==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_I_A
+                            feeder.i_a=value
                         if feeder.register_ct_i_b==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_I_B
+                            feeder.i_b=value
                         if feeder.register_ct_i_c==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_I_C
+                            feeder.i_c=value
                         
                         if feeder.register_vt_v_a==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_V_A
+                            feeder.v_a=value
                         if feeder.register_vt_v_b==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_V_B
+                            feeder.v_b=value
                         if feeder.register_vt_v_c==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_V_C
+                            feeder.v_c=value
                         
                         if feeder.register_vt_v_ab==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_V_AB
@@ -106,12 +112,16 @@ class ComServerRepo:
                         ctd.origin_value=value
                         ctd.status=InputOutputStatusEnum.SUCCESSFULL
                         ctd.save()
+                        feeder.save()
+
                     register+=1
             if com_server_data.code_name==ComServerOperationCodeEnum.READ_COILS:
                 values=leo_modbus.read_coils(start_address,count)
                 register=start_address
-                
-                values= [True, False, False, False, False]
+                if value is None:
+                    pass
+                    
+                values= [ True,False, False,False,  False]
                 if values is not None:
                     for value in values:
                         feeder=Feeder.objects.filter(com_server=com_server).filter(
@@ -128,18 +138,20 @@ class ComServerRepo:
                             cb.feeder=feeder
                             if feeder.register_cb_open==register:
                                 cb.name=FeederComponentNameEnum.REGISTER_CB_OPEN
+                                feeder.circuit_breaker_status=CircuitBreakerStatusEnum.OPEN
                             if feeder.register_cb_close==register:
                                 cb.name=FeederComponentNameEnum.REGISTER_CB_CLOSE
+                                feeder.circuit_breaker_status=CircuitBreakerStatusEnum.CLOSE
                             if feeder.register_cb_test==register:
                                 cb.name=FeederComponentNameEnum.REGISTER_CB_TEST
+                                feeder.circuit_breaker_status=CircuitBreakerStatusEnum.TEST
                             if feeder.register_cb_trip==register:
                                 cb.name=FeederComponentNameEnum.REGISTER_CB_TRIP
-
+                                feeder.circuit_breaker_status=CircuitBreakerStatusEnum.TRIP
                             cb.origin_value=value
-                            if feeder.register_cb_open==register:
-                                cb.origin_value=1
                             cb.status=InputOutputStatusEnum.SUCCESSFULL
                             cb.save()
+                            feeder.save()
                         register+=1
             com_server_data.save()
         return values
@@ -245,6 +257,7 @@ class FeederRepo:
         elif 'pk' in kwargs:
             pk=kwargs['pk']
         elif 'title' in kwargs:
-            return self.objects.filter(title=kwargs['title']).first()
-        return self.objects.filter(pk=pk).first()
+            feeder= self.objects.filter(title=kwargs['title']).first()
+        feeder= self.objects.filter(pk=pk).first()
+        return feeder
     

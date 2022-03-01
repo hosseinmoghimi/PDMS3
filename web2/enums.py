@@ -53,7 +53,7 @@ class LogStatusEnum(TextChoices):
 class CircuitBreakerStatusEnum(TextChoices):
     OPEN='OPEN',_('OPEN')
     CLOSE='CLOSE',_('CLOSE')
-    TESTING='TESTING',_('TESTING')
+    TEST='TEST',_('TEST')
     FAILED='FAILED',_('FAILED')
     TRIP='TRIP',_('TRIP')
     SERVICE='SERVICE',_('SERVICE')

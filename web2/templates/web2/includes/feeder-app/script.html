@@ -46,7 +46,7 @@
                         feeder_app.feeder = data.feeder
                         current_transformer_app.update_values(data.REGISTER_I_A, data.REGISTER_I_B, data.REGISTER_I_C)
                         voltage_transformer_app.update_values(data.REGISTER_V_A, data.REGISTER_V_B, data.REGISTER_V_C)
-
+                        console.log(feeder.cb_status)
                     }
                 })
             }
