@@ -18,6 +18,9 @@ class ComServerApi(APIView):
                 com_server_id=read_com_server_form.cleaned_data['com_server_id']
                 address=read_com_server_form.cleaned_data['address']
                 count=read_com_server_form.cleaned_data['count']
+                print(com_server_id)
+                print(address)
+                print(count)
                 values=ComServerRepo(request=request).read(address=address,count=count,com_server_id=com_server_id)
                 if values is not None:
                     context['values']=values
@@ -52,7 +55,7 @@ class FeederApi(APIView):
                 if feeder is not None:
                     # feeder.update_data()
                     context['feeder']=FeederFullSerializer(feeder).data
-                    values=feeder.get_last_values(10)
+                    values=feeder.get_last_values(50)
                     context[FeederComponentNameEnum.REGISTER_I_A]=list(i.value() for i in values[FeederComponentNameEnum.REGISTER_I_A])
                     context[FeederComponentNameEnum.REGISTER_I_B]=list(i.value() for i in values[FeederComponentNameEnum.REGISTER_I_B])
                     context[FeederComponentNameEnum.REGISTER_I_C]=list(i.value() for i in values[FeederComponentNameEnum.REGISTER_I_C])

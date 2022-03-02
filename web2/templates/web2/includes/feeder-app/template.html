@@ -1,7 +1,12 @@
 <div class="card" id="feeder-app">
     <div class="card-body">
+         
         <div>
-        </div>
+                
+            <button @click="run=true" v-if="!run" class="btn btn-success">Run</button>
+            <button @click="run=false" v-if="run" class="btn btn-danger">Stop</button>
+                        </div>
+
         <div class="text-left">
             I a : <span v-text="i_a()"></span> <small>(Amepere)</small>
          </div>

@@ -31,13 +31,13 @@
 
     let current_transformer_app = new Vue({
         el: "#current-transformer-app",
-        data: {
+        data: { 
             values_i_a: [0],
             values_i_b: [0],
             values_i_c: [0],
-            i_a: 190,
-            i_b: 170,
-            i_c: 180,
+            i_a: 0,
+            i_b: 0,
+            i_c: 0,
             ratio: feeder_current_transformers_ratio,
         },
         methods: {
@@ -87,6 +87,7 @@
             },
 
             update_values: function (values_REGISTER_I_A, values_REGISTER_I_B, values_REGISTER_I_C) {
+                
                 this.values_i_a = values_REGISTER_I_A
                 this.values_i_b = values_REGISTER_I_B
                 this.values_i_c = values_REGISTER_I_C
@@ -96,6 +97,12 @@
                 this.i_c = values_REGISTER_I_C[GRAPH_DATA_COUNT - 1]
                 this.draw_guage_charts()
                 drawCurrentLinearChart()
+                a=1
+                xValues=[]
+                values_REGISTER_I_A.forEach(element => {
+                    xValues.push(values_REGISTER_I_A.length-a)
+                    a++
+                });
             },
         }
     })
@@ -103,7 +110,6 @@
 
 <script src="{% static 'charts/Chart.min.js' %}"></script>
 <script>
-
     var xValues = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
     function drawCurrentLinearChart() {
 
@@ -135,7 +141,7 @@
         new Chart(document.getElementById("current-line-chart"), {
             type: 'line',
             data: {
-                labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+                labels: xValues,
                 datasets: [{
                     data: current_transformer_app.values_i_a,
                     label: "Africa",

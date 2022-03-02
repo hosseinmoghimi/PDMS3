@@ -115,6 +115,7 @@ class Feeder(models.Model):
     register_p=models.IntegerField(_("register p"),default=REGISTER_P)
     register_s=models.IntegerField(_("register s"),default=REGISTER_S)
 
+    register_power_factor=models.IntegerField(_("register_power_factor"),default=REGISTER_POWER_FACTOR)
 
     circuit_breaker_status=models.CharField(_("circuit_breaker_status"),choices=CircuitBreakerStatusEnum.choices,default=CircuitBreakerStatusEnum.TEST, max_length=50)
     i_a=models.IntegerField(_("I a"),null=True,blank=True)
@@ -124,6 +125,19 @@ class Feeder(models.Model):
     v_a=models.IntegerField(_("V a"),null=True,blank=True)
     v_b=models.IntegerField(_("V b"),null=True,blank=True)
     v_c=models.IntegerField(_("V c"),null=True,blank=True)
+
+    v_ab=models.IntegerField(_("V ab"),null=True,blank=True)
+    v_bc=models.IntegerField(_("V bc"),null=True,blank=True)
+    v_ac=models.IntegerField(_("V ac"),null=True,blank=True)
+
+
+    
+    p=models.IntegerField(_("p"),null=True,blank=True)
+    q=models.IntegerField(_("q"),null=True,blank=True)
+    s=models.IntegerField(_("s"),null=True,blank=True)
+
+    power_factor=models.IntegerField(_("power_factor"),null=True,blank=True)
+
 
     class_name="feeder"
 
@@ -301,7 +315,7 @@ class Feeder(models.Model):
 
     
     def get_last_values(self,count):
-        objects=AnalogComponent.objects.filter(feeder=self)
+        objects=AnalogComponent.objects.filter(feeder=self).order_by("-date_added")
         return {
             
                 FeederComponentNameEnum.REGISTER_I_A: objects.filter(name=FeederComponentNameEnum.REGISTER_I_A)[:count],
