@@ -29,7 +29,6 @@ class ComServerDataBlock(models.Model):
     com_server=models.ForeignKey("comserver", verbose_name=_("comserver"), on_delete=models.CASCADE)
     start_address=models.IntegerField(_("start_address"),default=1)
     count=models.IntegerField(_("count"),default=1)
-    # data=models.CharField(_("data"), max_length=5000000)
     code_name=models.CharField(_("code"),choices=ComServerOperationCodeEnum.choices, max_length=50)
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     date_updated=models.DateTimeField(_("date_updated"), auto_now=True, auto_now_add=False)
