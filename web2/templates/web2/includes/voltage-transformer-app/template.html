@@ -1,0 +1,88 @@
+<div id="voltage-transformer-app">
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="text-left mb-3">
+                Voltage Transformer
+            </h4>
+
+        </div>
+        <div class="card-body">
+
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="text-center">
+                        V a : <span v-text="v_a"></span> <small>(Volts)</small>
+
+                    </h5>
+                    <div class="text-center">
+
+                        <canvas width="400" height="187" id="canvas-voltage-transformer-va"
+                            style="width: 380px; height: 150px;"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="text-center">
+                        V b : <span v-text="v_b"></span> <small>(Volts)</small>
+
+                    </h5>
+                    <div class="text-center">
+
+                        <canvas width="400" height="187" id="canvas-voltage-transformer-vb"
+                            style="width: 380px; height: 150px;"></canvas>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="text-center">
+                        V c : <span v-text="v_c"></span> <small>(Volts)</small>
+
+                    </h5>
+                    <div class="text-center">
+
+                        <canvas width="400" height="187" id="canvas-voltage-transformer-vc"
+                            style="width: 380px; height: 150px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="text-left mb-3">
+                Voltage Transformer
+            </h4>
+
+        </div>
+        <div class="card-body">
+            <div class="text-center">
+
+                <canvas id="voltage-linear-chart" style="width:100%;"></canvas>
+
+            </div>
+
+
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h4 class="text-left mb-3">
+                Voltage Transformer
+            </h4>
+        </div>
+        
+        <div class="card-body">
+            <div class="text-center">
+                <canvas id="voltage-line-chart" width="800" height="250"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,53 @@
+<script>
+    let com_servers = JSON.parse(`{{com_servers_s|escapejs}}`)
+    let url = "{% url 'web2:read' %}"
+
+    let read_app = new Vue({
+        el: "#read-app",
+        data: {
+            com_servers: com_servers,
+
+        },
+        methods: {
+            read_com_server: function (com_server) {
+
+                com_server.reading = true
+                let payload = {
+                    com_server_id: com_server.id,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                }
+                let post = $.post(url, payload)
+                post.done(data => {
+                    com_server.reading = false
+
+                    console.log({ com_server: com_server.name, result: data.result })
+                    if (data.result === 'SUCCEED') {
+                        com_server.color = "success"
+                    }
+                    else {
+
+                        com_server.color = "danger"
+                    }
+
+                    setTimeout(() => {
+                        read_app.read_com_server(com_server)
+
+                    }, com_server.interval);
+                })
+
+                post.fail(data => {
+                    com_server.reading = false
+                    console.log(com_server.id + " fail")
+
+                    setTimeout(() => {
+                        read_app.read_com_server(com_server)
+
+                    }, com_server.interval);
+                })
+
+
+            },
+
+        }
+    })
+</script>

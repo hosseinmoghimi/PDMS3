@@ -1,0 +1,63 @@
+<script>
+    let feeder = JSON.parse(`{{feeder_s|escapejs}}`)
+    // let circuint_breaher=JSON.parse(`{{circuint_breaher_s|escapejs}}`)
+    let feeder_app_data = {
+        run: true,
+        feeder: feeder,
+        refresh_interval: 1000,
+        // circuint_breaher:circuint_breaher,
+    }
+</script>
+<script>
+    function run() {
+        feeder_app.get_feeder()
+        setTimeout(() => {
+            run()
+        }, feeder_app.feeder.com_server.interval)
+    }
+    $(document).ready(() => {
+        run()
+    })
+    let feeder_app = new Vue({
+        el: "#feeder-app",
+        data: feeder_app_data,
+        mounted: function () {
+        },
+        methods: {
+            i_a: function () {
+                return current_transformer_app.i_a
+            },
+            i_b: function () {
+                return current_transformer_app.i_b
+            },
+            i_c: function () {
+                return current_transformer_app.i_c
+            },
+
+            get_feeder: function () {
+
+
+                if (!this.run) {
+                    return
+                }
+
+                let url = "{% url 'web2:get_feeder' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    feeder_id: this.feeder.id
+                }
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    // console.log(data.feeder.v_a)
+                    if (data.result === 'SUCCEED') {
+                        feeder_app.feeder = data.feeder
+                        current_transformer_app.update_values(data.REGISTER_I_A, data.REGISTER_I_B, data.REGISTER_I_C)
+                        voltage_transformer_app.update_values(data.REGISTER_V_A, data.REGISTER_V_B, data.REGISTER_V_C)
+                        console.log(data.REGISTER_I_A)
+                    }
+                })
+            }
+
+        }
+    })
+</script>

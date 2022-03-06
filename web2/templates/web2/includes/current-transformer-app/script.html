@@ -1,0 +1,177 @@
+{% load static %}
+<script src="{% static 'vendor/js/gauge/gauge.min.js' %}"></script>
+<script>
+    var xValues = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+
+
+    let feeder_current_transformers_ratio = parseInt("{{feeder.current_transformers_ratio}}")
+    opts = {
+        angle: 0.15, // The span of the gauge arc
+        lineWidth: 0.44, // The line thickness
+        radiusScale: 1, // Relative radius
+        pointer: {
+            length: 0.6, // // Relative to gauge radius
+            strokeWidth: 0.035, // The thickness
+            color: '#000000' // Fill color
+        },
+        limitMax: false,     // If false, max value increases automatically if value > maxValue
+        limitMin: false,     // If true, the min value of the gauge will be fixed
+        colorStart: '#6FADCF',   // Colors
+        colorStop: '#8FC0DA',    // just experiment with them
+        strokeColor: '#E0E0E0',  // to see which ones work best for you
+        generateGradient: true,
+        highDpiSupport: true,     // High resolution support
+        percentColors: [[0.0, "#a9d70b"], [0.50, "#f9c802"], [1.0, "#ff0000"]],
+
+    };
+
+
+    let current_transformer = "{{current_transformer_s|escapejs}}"
+    // let i_a_values = JSON.parse(`{{i_a_values_s|escapejs}}`)
+    // let i_b_values = JSON.parse(`{{i_b_values_s|escapejs}}`)
+    // let i_c_values = JSON.parse(`{{i_c_values_s|escapejs}}`)
+    animationSpeed = 10
+
+    let current_transformer_app = new Vue({
+        el: "#current-transformer-app",
+        data: { 
+            values_i_a: [0],
+            values_i_b: [0],
+            values_i_c: [0],
+            i_a: 0,
+            i_b: 0,
+            i_c: 0,
+            ratio: feeder_current_transformers_ratio,
+        },
+        methods: {
+
+            draw_guage_charts: function () {
+                try {
+                    let ratio = this.ratio
+
+                    var target_a = document.getElementById("canvas-current-transformer-a")
+                    var gauge_a = new Gauge(target_a).setOptions(opts); // create sexy gauge!
+                    gauge_a.maxValue = ratio; // set max gauge value
+                    gauge_a.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+                    gauge_a.animationSpeed = animationSpeed; // set animation speed (32 is default value)
+                    gauge_a.set(this.i_a); // set actual value
+
+
+
+
+                    var target_b = document.getElementById("canvas-current-transformer-b")
+                    var gauge_b = new Gauge(target_b).setOptions(opts); // create sexy gauge!
+                    gauge_b.maxValue = ratio; // set max gauge value
+                    gauge_b.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+                    gauge_b.animationSpeed = animationSpeed; // set animation speed (32 is default value)
+                    gauge_b.set(this.i_b); // set actual value
+
+
+
+
+                    var target_c = document.getElementById("canvas-current-transformer-c")
+                    var gauge_c = new Gauge(target_c).setOptions(opts); // create sexy gauge!
+                    gauge_c.maxValue = ratio; // set max gauge value
+                    gauge_c.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+                    gauge_c.animationSpeed = animationSpeed; // set animation speed (32 is default value)
+                    gauge_c.set(this.i_c); // set actual value
+
+
+
+
+
+
+
+
+                } catch (error) {
+
+                }
+
+            },
+
+            update_values: function (values_REGISTER_I_A, values_REGISTER_I_B, values_REGISTER_I_C) {
+                
+                this.values_i_a = values_REGISTER_I_A.reverse()
+                this.values_i_b = values_REGISTER_I_B.reverse()
+                this.values_i_c = values_REGISTER_I_C.reverse()
+                // console.log(current_transformer_app.values_i_a[9])
+                this.i_a = values_REGISTER_I_A[GRAPH_DATA_COUNT - 1]
+                this.i_b = values_REGISTER_I_B[GRAPH_DATA_COUNT - 1]
+                this.i_c = values_REGISTER_I_C[GRAPH_DATA_COUNT - 1]
+                a=1
+                xValues=[]
+                values_REGISTER_I_A.forEach(element => {
+                    xValues.push(values_REGISTER_I_A.length-a)
+                    a++
+                });
+                this.draw_guage_charts()
+                drawCurrentLinearChart()
+            },
+        }
+    })
+</script>
+
+<script src="{% static 'charts/Chart.min.js' %}"></script>
+<script>
+    function drawCurrentLinearChart() {
+
+        new Chart("current-linear-chart", {
+            type: "line",
+            animation:false,
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: current_transformer_app.values_i_a,
+                    borderColor: "red",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_b,
+                    borderColor: "green",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_c,
+                    borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                legend: { display: false }
+            }
+        })
+
+        // Bar chart
+        new Chart(document.getElementById("current-line-chart"), {
+            type: 'line',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: current_transformer_app.values_i_a,
+                    label: "Africa",
+                    borderColor: "#3e95cd",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_b,
+                    label: "Asia",
+                    borderColor: "#8e5ea2",
+                    fill: false
+                }, {
+                    data: current_transformer_app.values_i_c,
+                    label: "Europe",
+                    borderColor: "#3cba9f",
+                    fill: false
+                },
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'World population per region (in millions)'
+                }
+            }
+        });
+
+
+
+    }
+
+</script>

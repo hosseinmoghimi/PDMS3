@@ -22,8 +22,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'web',
+    'utility',
+    # 'web',
+    'web2',
     'core',
     'authentication',
 ]
@@ -61,13 +62,6 @@ WSGI_APPLICATION = 'pdms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
@@ -118,10 +112,14 @@ MEDIA_ROOT = server_settings.MEDIA_ROOT
 STATICFILES_DIRS=server_settings.STATICFILES_DIRS
 
 ADMIN_URL=server_settings.ADMIN_URL
+DATABASES = server_settings.DATABASES
 
 ALLOWED_HOSTS = server_settings.ALLOWED_HOSTS
-
-
+EMAIL_PORT = server_settings.EMAIL_PORT
+EMAIL_HOST_USER=server_settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD=server_settings.EMAIL_HOST_PASSWORD
+EMAIL_HOST=server_settings.EMAIL_HOST
+SEND_EMAIL=server_settings.SEND_EMAIL
 
 
 
