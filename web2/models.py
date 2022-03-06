@@ -433,6 +433,7 @@ class Log(models.Model):
 class FeederComponent(models.Model):
     feeder=models.ForeignKey("feeder", verbose_name=_("feeder"), on_delete=models.CASCADE)
     name=models.CharField(_("name"),max_length=100)
+    register=models.IntegerField(_("register"),default=0)
     origin_value=models.IntegerField(_("origin_value"))
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
 
@@ -441,7 +442,7 @@ class FeederComponent(models.Model):
         verbose_name_plural = _("FeederComponents")
 
     def __str__(self):
-        return f"""{self.feeder.name} : {self.name}"""
+        return f"""{self.feeder.com_server}:{self.register}:{self.feeder.name} : {self.name}:{self.value()}"""
  
  
     def value(self):
@@ -472,6 +473,7 @@ class BinaryComponent(FeederComponent):
  
  
     def __str__(self):
-        return f"""{self.feeder.name} : {self.name}: {self.binary_value()}"""
+        # return f"""{self.feeder.name} : {self.name}: {self.binary_value()}"""
+        return f"""{self.feeder.com_server}:{self.register}:{self.feeder.name} : {self.name}:{self.binary_value()}"""
  
  

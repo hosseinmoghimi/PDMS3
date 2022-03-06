@@ -1,6 +1,9 @@
 {% load static %}
 <script src="{% static 'vendor/js/gauge/gauge.min.js' %}"></script>
 <script>
+    var xValues = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+
+
     let feeder_current_transformers_ratio = parseInt("{{feeder.current_transformers_ratio}}")
     opts = {
         angle: 0.15, // The span of the gauge arc
@@ -88,21 +91,21 @@
 
             update_values: function (values_REGISTER_I_A, values_REGISTER_I_B, values_REGISTER_I_C) {
                 
-                this.values_i_a = values_REGISTER_I_A
-                this.values_i_b = values_REGISTER_I_B
-                this.values_i_c = values_REGISTER_I_C
+                this.values_i_a = values_REGISTER_I_A.reverse()
+                this.values_i_b = values_REGISTER_I_B.reverse()
+                this.values_i_c = values_REGISTER_I_C.reverse()
                 // console.log(current_transformer_app.values_i_a[9])
                 this.i_a = values_REGISTER_I_A[GRAPH_DATA_COUNT - 1]
                 this.i_b = values_REGISTER_I_B[GRAPH_DATA_COUNT - 1]
                 this.i_c = values_REGISTER_I_C[GRAPH_DATA_COUNT - 1]
-                this.draw_guage_charts()
-                drawCurrentLinearChart()
                 a=1
                 xValues=[]
                 values_REGISTER_I_A.forEach(element => {
                     xValues.push(values_REGISTER_I_A.length-a)
                     a++
                 });
+                this.draw_guage_charts()
+                drawCurrentLinearChart()
             },
         }
     })
@@ -110,7 +113,6 @@
 
 <script src="{% static 'charts/Chart.min.js' %}"></script>
 <script>
-    var xValues = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
     function drawCurrentLinearChart() {
 
         new Chart("current-linear-chart", {

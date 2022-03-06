@@ -109,6 +109,7 @@ class ComServerRepo:
                         if feeder.register_s==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_S
 
+                        ctd.register=register
                         ctd.origin_value=value
                         ctd.status=InputOutputStatusEnum.SUCCESSFULL
                         ctd.save()
@@ -121,7 +122,7 @@ class ComServerRepo:
                 if value is None:
                     pass
                     
-                values= [ True,False, False,False,  False]
+                # values= [ True,False, False,False,  False]
                 if values is not None:
                     for value in values:
                         feeder=Feeder.objects.filter(com_server=com_server).filter(
@@ -149,6 +150,7 @@ class ComServerRepo:
                                 cb.name=FeederComponentNameEnum.REGISTER_CB_TRIP
                                 feeder.circuit_breaker_status=CircuitBreakerStatusEnum.TRIP
                             cb.origin_value=value
+                            cb.register=register
                             cb.status=InputOutputStatusEnum.SUCCESSFULL
                             cb.save()
                             feeder.save()

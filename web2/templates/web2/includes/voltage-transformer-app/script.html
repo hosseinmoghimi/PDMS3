@@ -87,14 +87,24 @@
             },
 
             update_values: function (values_REGISTER_V_A, values_REGISTER_V_B, values_REGISTER_V_C) {
-                this.values_v_a = values_REGISTER_V_A
-                this.values_v_b = values_REGISTER_V_B
-                this.values_v_c = values_REGISTER_V_C
+                this.values_v_a = values_REGISTER_V_A.reverse()
+                this.values_v_b = values_REGISTER_V_B.reverse()
+                this.values_v_c = values_REGISTER_V_C.reverse()
                 this.v_a = this.values_v_a[GRAPH_DATA_COUNT - 1]
                 this.v_b = this.values_v_b[GRAPH_DATA_COUNT - 1]
                 this.v_c = this.values_v_c[GRAPH_DATA_COUNT - 1]
+                
+                a=1
+                xValues=[]
+                values_REGISTER_V_A.forEach(element => {
+                    xValues.push(values_REGISTER_V_A.length-a)
+                    a++
+                });
+
                 this.draw_guage_charts()
                 drawVoltageLinearChart()
+
+
             },
         }
     })
