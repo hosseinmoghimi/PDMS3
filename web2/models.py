@@ -230,6 +230,7 @@ class Feeder(models.Model):
             return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-failed-dead.png'
         if status==CircuitBreakerStatusEnum.TEST:
             return f'{STATIC_URL}{APP_NAME}/img/circuit-breaker-test.png'
+        
        
     def earth_schematic(self):
         status=self.circuit_breaker_status
@@ -265,20 +266,20 @@ class Feeder(models.Model):
             <div>
             
             {components_panels}
-            <h3>
+            <h5>
             <a href="{self.get_absolute_url()}">
             
             {self.name}
             </a>
-            </h3>
+            </h5>
             </div>
         """
     
     def panel_for_bus_view(self):
         # return ""
         components_panels=""
-        components_panels+=f"""<div><a href="{self.get_absolute_url()}" target="_blank">{self.name}</a>"""
-        components_panels+=f"""<div><img src="{self.circuit_breaker_schematic()}" width="100"></div>"""
+        components_panels+=f"""<div class="text-center"><a href="{self.get_absolute_url()}" target="_blank"><h4>{self.name}<h4></a>"""
+        components_panels+=f"""<div class="text-center"><img src="{self.circuit_breaker_schematic()}" width="100"></div>"""
         # components_panels+=f"""<div><img src="{self.earth_schematic()}" width="100"></div>"""
         components_panels+=self.parameters_schematic()
         # components_panels+=self.current_transformer.panel()
@@ -286,12 +287,7 @@ class Feeder(models.Model):
             <div>
             
             {components_panels}
-            <h3>
-            <a href="{self.get_absolute_url()}">
-            
-            {self.name}
-            </a>
-            </h3>
+           
             </div>
         """
     

@@ -17,7 +17,28 @@ def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['LAYOUT_PARENT']=LAYOUT_PARENT
     return context
-
+class ChartView(View):
+    def get(self,request,*args, **kwargs):
+        context=getContext(request=request)
+        user=request.user
+        context=getContext(request)
+        if 'bus_id' in kwargs:
+            bus_id=kwargs['bus_id']        
+            buses=BusRepo(user=user).list().filter(pk=bus_id)
+            feeders=FeederRepo(request.user).list(bus_id=bus_id)
+        else:
+            buses=BusRepo(user=user).list(*args, **kwargs)
+            feeders=FeederRepo(request.user).list()
+        context['buses']=buses
+        buses_s=json.dumps(BusSerializer(buses,many=True).data)
+        context['buses_s']=buses_s
+        
+        feeders_s=json.dumps(FeederSerializerForChart(feeders,many=True).data)
+        context['feeders_s']=feeders_s
+        context['feeders']=feeders
+       
+        context['bus_color']=buses.first().get_color()
+        return render(request,TEMPLATE_ROOT+"chart.html",context)
 
 class ComServerViews(View):
     def com_server(self,request,*args, **kwargs):
