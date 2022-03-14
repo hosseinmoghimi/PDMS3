@@ -52,7 +52,6 @@ class ComServerRepo:
                 if values is None:
                     return
                 for value in values:
-                    
                     feeder=Feeder.objects.filter(com_server=com_server).filter(
                         Q(register_ct_i_a=register) |
                         Q(register_ct_i_b=register) |
@@ -114,13 +113,13 @@ class ComServerRepo:
                         ctd.status=InputOutputStatusEnum.SUCCESSFULL
                         ctd.save()
                         feeder.save()
-
                     register+=1
             if com_server_data.code_name==ComServerOperationCodeEnum.READ_COILS:
+                print(leo_modbus.host())
                 values=leo_modbus.read_coils(start_address,count)
                 register=start_address
-                if value is None:
-                    pass
+                if values is None:
+                    return
                     
                 # values= [ True,False, False,False,  False]
                 if values is not None:

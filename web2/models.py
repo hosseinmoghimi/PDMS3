@@ -42,7 +42,7 @@ class ComServerDataBlock(models.Model):
     
 class ComServer(models.Model):
     name=models.CharField(_("name"), max_length=50)
-    ip1=models.CharField(_("ip1"),default="192.168.1.254", max_length=50)
+    ip1=models.CharField(_("ip1"),default=COM_SERVER_DEFAULT_IP, max_length=50)
     port1=models.CharField(_("port1"),default=str(COM_SERVER_DEFAULT_PORT), max_length=50)
     ip2=models.CharField(_("ip2"),default="192.168.2.254", max_length=50)
     port2=models.CharField(_("port2"),default="8080", max_length=50)

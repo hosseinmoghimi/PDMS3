@@ -30,6 +30,8 @@ class LeoModbus(ModbusClient):
         retry=0
         # open or reconnect TCP to server
         while not self.is_open() and retry<RETRY_TO_CONNECT_TIME:
+            if self.open():
+                print(self.host() +" is Open")
             retry+=1
             if not self.open():
                 print("unable to connect to "+host+":"+str(port))
