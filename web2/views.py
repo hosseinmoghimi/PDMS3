@@ -17,7 +17,7 @@ def getContext(request):
     context=CoreContext(request=request,app_name=APP_NAME)
     context['LAYOUT_PARENT']=LAYOUT_PARENT
     return context
-class ChartView(View):
+class BusBarView(View):
     def get(self,request,*args, **kwargs):
         context=getContext(request=request)
         user=request.user
@@ -38,7 +38,7 @@ class ChartView(View):
         context['feeders']=feeders
        
         context['bus_color']=buses.first().get_color()
-        return render(request,TEMPLATE_ROOT+"chart.html",context)
+        return render(request,TEMPLATE_ROOT+"bas-bar.html",context)
 
 class ComServerViews(View):
     def com_server(self,request,*args, **kwargs):

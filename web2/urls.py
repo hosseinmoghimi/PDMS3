@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 app_name=APP_NAME
 urlpatterns = [
     path('',login_required(views.BasicViews().home),name="home"),
-    path('chart/<int:bus_id>/',login_required(views.ChartView.as_view()),name="chart"),
+    path('bus_bar/<int:bus_id>/',login_required(views.BusBarView.as_view()),name="bus_bar"),
     path('bus_monitoring/<int:bus_id>/',login_required(views.BasicViews().monitoring),name="bus_monitoring"),
     path('com_server/<int:pk>/',views.ComServerViews().com_server,name="comserver"),
     path('node/<int:pk>/',views.BasicViews().node,name="node"),

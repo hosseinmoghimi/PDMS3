@@ -15,7 +15,13 @@
        }
    </style>
    
-    <title>Hello, world!</title>
+   <title>
+        {% for bus in buses %}
+        {{bus.name}} :
+        Bus Bar
+        {% endfor %}
+
+    </title>
 </head>
 
 <body>

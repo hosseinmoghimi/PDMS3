@@ -336,7 +336,7 @@ class Bus(models.Model):
     def panel(self):
         return f"""
         <div>
-        <a href="{self.get_absolute_url()}">
+        <a target="_blank" href="{self.get_absolute_url()}">
         {self.area.region}-{self.area.name} : {self.name} ({self.tip})
         </a>
         </div>
@@ -351,19 +351,11 @@ class Bus(models.Model):
         verbose_name_plural = 'Buses'
     def get_absolute_url(self):
         return reverse(APP_NAME+":bus",kwargs={'pk':self.pk})
-    def get_monitoring_url(self):
-        return reverse(APP_NAME+":bus_monitoring",kwargs={'bus_id':self.pk})
+    def get_bus_bar_url(self):
+        return reverse(APP_NAME+":bus_bar",kwargs={'bus_id':self.pk})
     def get_edit_url(self):
         return f"{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"
-    def get_monitoring_btn(self):
-        return f"""
-            <a title="Monitor {self.name}" class="btn btn-link btn-success" href="{self.get_monitoring_url()}">
-            <i class="material-icons">
-            settings
-            </i>
-            </a>
-        """
-
+     
     def get_color(self):
         if not self.is_live:
             return "#000"
