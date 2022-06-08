@@ -1,0 +1,25 @@
+<div class="btn-group" role="group" aria-label="Basic example">
+
+    <a class="btn btn-success" href="{{feeder.get_absolute_url}}">
+        <i class="fa fa-gear">
+        </i>
+        <small>
+            Open Detail page for
+        </small>
+        {{feeder.name}}
+    </a>
+
+    <a title="Edit {{feeder.name}}" class="btn btn-danger" href="{{feeder.get_edit_url}}">
+        <i class="fa fa-gear">
+        </i>
+
+    </a>
+</div>
+<div class="ml-5">
+    <h6>
+        ComServers Connected To {{feeder.name}} :
+    </h6>
+    {% for com_server in feeder.com_server_set.all %}
+    {% include "web/includes/com-server-app/template.html" %}
+    {% endfor %}
+</div>

@@ -1,9 +1,47 @@
+from unittest import result
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from .serializers import *
 from core.constants import SUCCEED,FAILED
 from .repo import *
 from .forms import *
+
+class WriteCommandApi(APIView):
+    def post(self,request,*args, **kwargs):
+        user=request.user
+        context={}
+        context['result']=FAILED
+        if request.method=='POST':
+            get_feeder_form=WriteCommandForm(request.POST)
+            if get_feeder_form.is_valid():
+                address=get_feeder_form.cleaned_data['address']
+                value=get_feeder_form.cleaned_data['value']
+                host=get_feeder_form.cleaned_data['host']
+                port=get_feeder_form.cleaned_data['port']
+                result=FeederRepo(request=request).write_command(request=request,host=host,address=address,value=value,port=port)
+                print(result)
+                if result is not None:
+                    # feeder.update_data()
+                    context['result']=SUCCEED
+        return JsonResponse(context)
+
+class ReadCommandApi(APIView):
+    def post(self,request,*args, **kwargs):
+        user=request.user
+        context={}
+        context['result']=FAILED
+        if request.method=='POST':
+            get_feeder_form=ReadCommandForm(request.POST)
+            if get_feeder_form.is_valid():
+                address=get_feeder_form.cleaned_data['address']
+                host=get_feeder_form.cleaned_data['host']
+                port=get_feeder_form.cleaned_data['port']
+                result=FeederRepo(request=request).read_command(request=request,host=host,address=address,port=port)
+                print(result)
+                if result is not None:
+                    # feeder.update_data()
+                    context['result']=SUCCEED
+        return JsonResponse(context)
 
 
 class ComServerApi(APIView):

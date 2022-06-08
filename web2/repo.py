@@ -231,6 +231,24 @@ class BusRepo:
 
 
 class FeederRepo:
+    def read_command(self,request,*args, **kwargs):
+        address=kwargs['address']
+        host=kwargs['host']
+        port=kwargs['port']
+        leo_modbus=LeoModbus(request=request)
+        leo_modbus.connect(host=host,port=port)
+        a=leo_modbus.read_coils(address=address,count=2)
+        return a
+    
+    def write_command(self,request,*args, **kwargs):
+        address=kwargs['address']
+        value=kwargs['value']
+        host=kwargs['host']
+        port=kwargs['port']
+        leo_modbus=LeoModbus(request=request)
+        leo_modbus.connect(host=host,port=port)
+        a=leo_modbus.write_single_coil( address=address,value=value)
+        return a
     def __init__(self,*args, **kwargs):
         self.request=None
         self.user=None

@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'utility',
-    # 'web',
+    'web',
     'web2',
     'core',
     'authentication',

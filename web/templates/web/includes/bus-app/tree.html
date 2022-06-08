@@ -1,0 +1,47 @@
+<div class="btn-group" role="group" aria-label="Basic example">
+    <a class="btn btn-primary" href="{{bus.get_absolute_url}}">
+
+      {{bus.name}}
+  </a>
+<a title="Edit {{bus.name}}" class="btn btn-danger" href="{{bus.get_edit_url}}">
+
+  <i class="fa fa-gear">
+
+  </i>
+
+
+
+</a>
+</div>
+
+<div class="ml-5">
+    
+Feeders:
+<div class="accordion accordion-flush" id="accordionBusesFlush">
+
+
+    <div>
+
+        {% for feeder in bus.feeder_set.all %}
+        <div>
+
+            <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse-feeder-{{feeder.pk}}" role="button"
+                aria-expanded="false" aria-controls="collapse-feeder-{{feeder.pk}}">
+                {{feeder.name}}
+
+
+            </a>
+
+        </div>
+        <div class="ml-5 collapse" id="collapse-feeder-{{feeder.pk}}">
+            <div class="card card-body">
+                {% include "web/includes/feeder-app/tree.html" %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+ 
+
+
+</div>
+</div>

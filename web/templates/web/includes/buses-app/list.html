@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="card-header">
+        <h4>
+            Buses
+        </h4>
+    </div>
+    <div class="card-body">
+        {% for bus in buses %}
+        <div>
+            <a href="{{bus.get_absolute_url}}">{{bus.name}}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>

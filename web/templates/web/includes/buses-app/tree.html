@@ -1,0 +1,27 @@
+<div class="accordion accordion-flush" id="accordionBusesFlush">
+    <div>
+
+        {% for bus in buses %}
+        <div>
+
+            <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse-bus-{{bus.pk}}" role="button"
+                aria-expanded="true" aria-controls="collapse-bus-{{bus.pk}}">
+                {{bus.name}}
+            </a>
+        </div>
+
+        <div class="ml-5 collapse" id="collapse-bus-{{bus.pk}}">
+            <div class="card card-body">
+                
+
+
+                {% include "web/includes/bus-app/tree.html" %}
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+
+
+</div>

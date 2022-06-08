@@ -51,7 +51,11 @@
     </div>
     <div class="col-md-4">
         {% include "web2/includes/feeder-app/template.html" %}
-    </div>
+    </div> 
+    <div class="col-md-4">
+        {% include "web2/includes/write-command-app/template.html" %}
+        {% include "web2/includes/read-command-app/template.html" %}
+    </div> 
     <div class="col-md-12">
         {% include "web2/includes/current-transformer-app/template.html" %}
     </div>
@@ -71,6 +75,9 @@
 {% include "web2/includes/current-transformer-app/script.html" %}
 {% include "web2/includes/feeder-app/script.html" %}
 {% include "web2/includes/voltage-transformer-app/script.html" %}
+{% include "web2/includes/read-command-app/script.html" %}
+{% include "web2/includes/write-command-app/script.html" %}
+
 <script>
     $(document).ready(() => {
         current_transformer_app.draw_guage_charts()

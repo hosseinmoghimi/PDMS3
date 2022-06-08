@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="card-header">
+        <h4>
+            feeders
+        </h4>
+    </div>
+    <div class="card-body">
+        {% for feeder in feeders %}
+        <div>
+            <a href="{{feeder.get_absolute_url}}">{{feeder.name}}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>

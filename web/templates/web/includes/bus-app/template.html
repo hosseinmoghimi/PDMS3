@@ -1,0 +1,52 @@
+<div class="btn-group" role="group" aria-label="Basic example">
+      <a class="btn btn-primary" href="{{bus.get_absolute_url}}">
+
+        {{bus.name}}
+    </a>
+<a title="Edit {{bus.name}}" class="btn btn-danger" href="{{bus.get_edit_url}}">
+
+    <i class="fa fa-gear">
+
+    </i>
+
+
+
+</a>
+</div>
+
+
+
+
+<div>
+
+</div>
+
+
+
+<div class="ml-5">
+
+    <h6>
+        Feeders List For {{bus.name}} :
+    </h6>
+    <div class="accordion accordion-flush" id="accordionFeedersFlush">
+        {% for feeder in bus.feeder_set.all %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-heading-feeder-{{feeder.pk}}">
+                <button class="accordion-button collapsed btn btn-success btn-block" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#flush-collapse-feeder-{{feeder.pk}}"
+                    aria-expanded="false" aria-controls="flush-collapse-feeder-{{feeder.pk}}">
+                    <h5 class="text-center">
+                        {{feeder.name}}
+                    </h5>
+                </button>
+            </h2>
+            <div id="flush-collapse-feeder-{{feeder.pk}}" class="accordion-collapse collapse"
+                aria-labelledby="flush-heading-feeder-{{feeder.pk}}" data-bs-parent="#accordionFeedersFlush">
+                <div class="accordion-body">
+                    {% include "web/includes/feeder-app/template.html" %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -26,6 +26,8 @@ urlpatterns = [
     path('circuit_breaker_toggle/',login_required(apis.BasicApi().circuit_breaker_toggle),name="circuit_breaker_toggle"),
     path('circuit_breaker_read/',login_required(apis.BasicApi().circuit_breaker_read),name="circuit_breaker_read"),
     path('add_input_command/',login_required(views.BasicViews().add_input_command),name="add_input_command"),
-    path('read_com_server/',login_required(apis.ComServerApi.as_view),name="read_com_server"),
+    path('read_com_server/',login_required(apis.ComServerApi.as_view()),name="read_com_server"),
+    path('write_command/',login_required(apis.WriteCommandApi.as_view()),name="write_command"),
+    path('read_command/',login_required(apis.ReadCommandApi.as_view()),name="read_command"),
 ]
 

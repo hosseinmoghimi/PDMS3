@@ -1,0 +1,21 @@
+<div class="accordion accordion-flush" id="accordionBusesFlush">
+    {% for bus in buses %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-heading-bus-{{bus.pk}}">
+            <button class="accordion-button collapsed btn btn-primary btn-block" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapse-bus-{{bus.pk}}" aria-expanded="false"
+                aria-controls="flush-collapse-bus-{{bus.pk}}">
+                <h5 class="text-center">
+                    {{bus.name}} 
+                </h5>
+            </button>
+        </h2>
+        <div id="flush-collapse-bus-{{bus.pk}}" class="accordion-collapse collapse" aria-labelledby="flush-heading-bus-{{bus.pk}}"
+            data-bs-parent="#accordionBusesFlush">
+            <div class="accordion-body">
+                {% include "web/includes/bus-app/template.html" %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

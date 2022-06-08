@@ -44,8 +44,16 @@ class LeoModbus(ModbusClient):
             time.sleep(RETRY_TO_CONNECT_DELAY)
 
     def write_single_coil(self,address,value):
+        print("address")
+        print(address)
+        print("value")
+        print(value)
+        is_ok=False
         if self.is_open():           
             is_ok = super(LeoModbus,self).write_single_coil(address, value)
+        print("is_ok")
+        print(is_ok)
+        return is_ok
     def read_holding_registers(self,address,count):
         if self.is_open():
             self.regs=[]
@@ -84,6 +92,7 @@ class LeoModbus(ModbusClient):
                 log.save()
             # print('is not open!')
             pass
+
 def main():
     modbus=LeoModbus()
     port=502

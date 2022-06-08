@@ -1,0 +1,24 @@
+{% extends "web/layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4>
+                    {{feeder.name}}
+                </h4>
+                <div>
+                    Com Server :
+                    <a href="{{feeder.com_server.get_absolute_url}}">{{feeder.com_server.name}}</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}

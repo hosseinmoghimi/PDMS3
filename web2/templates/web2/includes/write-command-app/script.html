@@ -1,0 +1,33 @@
+<script>
+    let write_command_app = new Vue({
+        el: "#write-command-app",
+        data: {
+            address: 2051,
+        },
+        methods: {
+            start: function (host,port,address,value) {
+                return this.write_command(host,port,address,value)
+            },
+            stop: function (host,port,address,value) {
+                return this.write_command(host,port,address,value)
+            },
+            write_command: function (host,port,address,value) {
+                let url = "{% url 'web2:write_command' %}"
+                let payload = {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    host: host,
+                    port: port,
+                    address: address,
+                    value: value,
+                }
+                console.log(payload)
+                let posting = $.post(url, payload)
+                posting.done((data) => {
+                    console.log(data)
+                    if (data.result === 'SUCCEED') {
+                    }
+                })
+            }
+        }
+    })
+</script>

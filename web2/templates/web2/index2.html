@@ -1,0 +1,46 @@
+{% extends "web2/layout.html" %}
+{% block title %}
+communication!
+{% endblock %}
+
+
+
+{% block content %}
+{% if perms.communication.add_comserver %}
+{% endif %}
+
+<div class="row">
+
+    <div class="col-md-12">
+    
+        <div class="card card-stats">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                <h3 class="text-left">Buses</h3>
+                {{admin_utility.get_add_bus|safe}}
+
+                {% include "web2/includes/table-buses.html" %}
+
+
+
+
+            </div>
+        </div>
+    </div>
+    
+
+
+
+
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    let a = 90
+</script>
+
+{% endblock script %}

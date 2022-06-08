@@ -1,0 +1,21 @@
+{% extends "web/layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>
+            {{bus.name}}
+        </h4>
+    </div>
+    
+    <div class="col-md-6">
+        {% include "web/includes/feeders-app/template.html" %}
+    </div>
+    
+</div>
+{% endblock content %}
+
+{% block script %}
+{% include "web/includes/feeders-app/script.html" %}
+
+{% endblock script %}

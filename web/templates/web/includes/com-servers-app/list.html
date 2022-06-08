@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="card-header">
+        <h4>
+            ComServers
+        </h4>
+    </div>
+    <div class="card-body">
+        {% for com_server in com_servers %}
+        <div>
+            <a href="{{com_server.get_absolute_url}}">{{com_server.name}}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>

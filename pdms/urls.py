@@ -7,7 +7,7 @@ from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('web/', include('web.urls')),
+    path('web/', include('web.urls')),
     path('core/', include('core.urls')),
     path('accounts/', include('authentication.urls')),
     path('', include('web2.urls')),
