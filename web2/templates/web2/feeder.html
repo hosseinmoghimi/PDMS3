@@ -54,7 +54,7 @@
     </div> 
     <div class="col-md-4">
         {% include "web2/includes/write-command-app/template.html" %}
-        {% include "web2/includes/read-command-app/template.html" %}
+        <!-- {% include "web2/includes/read-command-app/template.html" %} -->
     </div> 
     <div class="col-md-12">
         {% include "web2/includes/current-transformer-app/template.html" %}
@@ -71,6 +71,8 @@
 
     let opts=""
     let animationSpeed=""
+    let feeder_id=parseInt("{{feeder.id}}")
+
 </script>
 {% include "web2/includes/current-transformer-app/script.html" %}
 {% include "web2/includes/feeder-app/script.html" %}
