@@ -17,8 +17,9 @@ class WriteCommandApi(APIView):
                 address=get_feeder_form.cleaned_data['address']
                 value=get_feeder_form.cleaned_data['value']
                 host=get_feeder_form.cleaned_data['host']
+                feeder_id=get_feeder_form.cleaned_data['feeder_id']
                 port=get_feeder_form.cleaned_data['port']
-                result=FeederRepo(request=request).write_command(request=request,host=host,address=address,value=value,port=port)
+                result=FeederRepo(request=request).write_command(request=request,host=host,address=address,value=value,port=port,feeder_id=feeder_id)
                 print(result)
                 if result is not None:
                     # feeder.update_data()
@@ -65,8 +66,8 @@ class ComServerApi(APIView):
                     context['result']=SUCCEED
         return JsonResponse(context)
 
-class FeederApi(APIView):
-    def get_feeder(self,request,*args, **kwargs):
+class GetFeederApi(APIView):
+    def post(self,request,*args, **kwargs):
         user=request.user
         context={}
         context['result']=FAILED

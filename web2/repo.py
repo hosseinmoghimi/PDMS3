@@ -169,6 +169,35 @@ class ComServerRepo:
             return self.objects.filter(title=kwargs['title']).first()
         return self.objects.filter(pk=pk).first()
     
+class LogRepo:
+    def __init__(self,*args, **kwargs):
+        self.request=None
+        self.user=None
+        if 'request' in kwargs:
+            self.request=kwargs['request']
+            self.user=self.request.user
+        if 'user' in kwargs:
+            self.user=kwargs['user']
+        self.objects=Log.objects.all()
+    def list(self,*args, **kwargs):
+        objects=self.objects
+        if 'search_for' in kwargs:
+            search_for=kwargs['search_for']
+            objects=objects.filter(Q(title__contains=search_for))
+        return objects
+        
+    def log(self,*args, **kwargs):
+        pk=0
+        if 'log_id' in kwargs:
+            pk=kwargs['log_id']
+        elif 'id' in kwargs:
+            pk=kwargs['id']
+        elif 'pk' in kwargs:
+            pk=kwargs['pk']
+        elif 'title' in kwargs:
+            return self.objects.filter(title=kwargs['title']).first()
+        return self.objects.filter(pk=pk).first()
+    
 
 class AreaRepo:
     def __init__(self,*args, **kwargs):
@@ -234,6 +263,9 @@ class FeederRepo:
     def read_command(self,request,*args, **kwargs):
         address=kwargs['address']
         host=kwargs['host']
+        feeder=FeederRepo(request=self.request).feeder(*args, **kwargs)
+        host=feeder.com_server.ip1
+        port=feeder.com_server.port1
         port=kwargs['port']
         leo_modbus=LeoModbus(request=request)
         leo_modbus.connect(host=host,port=port)
@@ -245,9 +277,12 @@ class FeederRepo:
         value=kwargs['value']
         host=kwargs['host']
         port=kwargs['port']
+        feeder=FeederRepo(request=self.request).feeder(*args, **kwargs)
+        host=feeder.com_server.ip1
+        port=feeder.com_server.port1
         leo_modbus=LeoModbus(request=request)
         leo_modbus.connect(host=host,port=port)
-        a=leo_modbus.write_single_coil( address=address,value=value)
+        a=leo_modbus.write_single_coil(address=address,value=value)
         return a
     def __init__(self,*args, **kwargs):
         self.request=None

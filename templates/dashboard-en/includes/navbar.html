@@ -38,29 +38,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link docs-creator" href="http://example.com" id="navbarDropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="material-icons">notifications</i>
-                        <span class="notification">5</span>
-                        <p class="d-lg-none d-md-block">
-                            Some Actions
-                        </p>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right ps" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item docs-creator" href="#">Mike John responded to your email</a>
-                        <a class="dropdown-item docs-creator" href="#">You have 5 new tasks</a>
-                        <a class="dropdown-item docs-creator" href="#">You're now friend with Andrew</a>
-                        <a class="dropdown-item docs-creator" href="#">Another Notification</a>
-                        <a class="dropdown-item docs-creator" href="#">Another One</a>
-                        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                            <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-                        </div>
-                        <div class="ps__rail-y" style="top: 0px; right: 0px;">
-                            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-                        </div>
-                    </div>
-                </li>
+               
 
 
                 {% if user.is_authenticated %}
@@ -69,7 +47,7 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="material-icons">person</i>
                         <p class="d-lg-none d-md-block">
-                            Account
+                            {{profile.name}}
                         </p>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">

@@ -4,13 +4,266 @@ communication!
 {% endblock %}
 
 
+{% block style %}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
 
+
+<style>
+    .tree li {
+        list-style-type: none;
+        margin: 0;
+        padding: 10px 5px 0 5px;
+        position: relative
+    }
+
+    .tree li::before,
+    .tree li::after {
+        content: '';
+        left: -20px;
+        position: absolute;
+        right: auto
+    }
+
+    .tree li::before {
+        border-left: 2px solid #000;
+        bottom: 50px;
+        height: 100%;
+        top: 0;
+        width: 1px
+    }
+
+    .tree li::after {
+        border-top: 2px solid #000;
+        height: 20px;
+        top: 25px;
+        width: 25px
+    }
+
+    .tree li span {
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border: 2px solid #000;
+        border-radius: 3px;
+        display: inline-block;
+        padding: 3px 8px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .tree>ul>li::before,
+    .tree>ul>li::after {
+        border: 0
+    }
+
+    .tree li:last-child::before {
+        height: 27px
+    }
+
+    .tree li span:hover {
+        /* background: hotpink; */
+        /* border: 2px solid #94a0b4; */
+    }
+
+    [aria-expanded="false"]>.expanded,
+    [aria-expanded="true"]>.collapsed {
+        display: none;
+    }
+</style>
+{% endblock style %}
 {% block content %}
 {% if perms.communication.add_comserver %}
 {% endif %}
 
 <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
 
+                <div class="tree ">
+                    <ul>
+
+                        <li>
+                            <span>
+                                <a style="color:#000; text-decoration:none;" data-toggle="collapse" href="#Web"
+                                    aria-expanded="true" aria-controls="Web"><i class="collapsed"><i
+                                            class="fas fa-folder"></i></i>
+                                    <i class="expanded"><i class="far fa-folder-open"></i></i> Bus List
+                                </a>
+                            </span>
+                            <div id="Web" class="collapse show">
+                                <ul>
+
+
+
+                                    {% for bus in buses %}
+                                    <li>
+
+                                        <span>
+                                            <a style="color:#000; text-decoration:none;" data-toggle="collapse"
+                                                href="#bus-{{bus.pk}}" aria-expanded="false"
+                                                aria-controls="bus-{{bus.pk}}">
+                                                <i class="collapsed"><i class="fas fa-folder"></i></i>
+
+                                                <i class="expanded">
+                                                    <i class="far fa-folder-open"></i>
+                                                </i>
+
+                                                <small>
+                                                    Bus :
+                                                </small>
+                                                {{bus.name}}</a>
+                                        </span>
+                                        <ul>
+                                            <div id="bus-{{bus.pk}}" class="collapse">
+                                                {% for feeder in bus.feeder_set.all %}
+                                                <li>
+                                                    <span>
+                                                        <a style="color:#000; text-decoration:none;"
+                                                            data-toggle="collapse" href="#feeder-{{feeder.pk}}"
+                                                            aria-expanded="false" aria-controls="feeder-{{feeder.pk}}">
+                                                            <i class="collapsed"><i class="fas fa-folder"></i></i>
+
+                                                            <i class="expanded">
+                                                                <i class="far fa-folder-open"></i>
+                                                            </i>
+                                                            <small>
+                                                                Feeder :
+
+                                                            </small>
+
+                                                            {{feeder.name}}</a>
+                                                    </span>
+                                                    <ul>
+                                                        <div id="feeder-{{feeder.pk}}" class="collapse">
+                                                            <li>
+                                                                <span>
+                                                                    <div>
+                                                                        <a style="color:#000; text-decoration:none;"
+                                                                            href="{{feeder.get_absolute_url}}">
+                                                                            <i class="fa fa-gear"></i>
+                                                                            open {{feeder.name}}</a>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a style="color:#000; text-decoration:none;"
+                                                                            href="{{feeder.get_edit_url}}">
+                                                                            <i class="fa fa-gear"></i>
+                                                                            edit {{feeder.name}}</a>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a style="color:#000; text-decoration:none;"
+                                                                            href="{{feeder.get_delete_url}}">
+                                                                            <i class="fa fa-gear"></i>
+                                                                            delete {{feeder.name}}</a>
+                                                                    </div>
+
+                                                                </span>
+
+                                                            </li>
+
+
+
+                                                              <li>
+                                                                <span>
+                                                                    <a style="color:#000; text-decoration:none;"
+                                                                        data-toggle="collapse"
+                                                                        href="#com-server-{{feeder.pk}}-{{feeder.com_server.pk}}"
+                                                                        aria-expanded="false"
+                                                                        aria-controls="com-server-{{feeder.pk}}-{{feeder.com_server.pk}}">
+                                                                        <i class="collapsed"><i
+                                                                                class="fas fa-folder"></i></i>
+
+                                                                        <i class="expanded">
+                                                                            <i class="far fa-folder-open"></i>
+                                                                        </i>
+                                                                        <small>
+                                                                            Com Server :
+                                                                        </small>
+                                                                        {{feeder.com_server.name}}</a>
+                                                                </span>
+                                                                <ul>
+                                                                    <div id="com-server-{{feeder.pk}}-{{feeder.com_server.pk}}"
+                                                                        class="collapse">
+
+                                                                        <li>
+                                                                            <span>
+                                                                                <div>
+
+                                                                                    <a style="color:#000; text-decoration:none;"
+                                                                                        href="{{feeder.com_server.get_absolute_url}}">
+                                                                                        <i class="fa fa-gear"></i>
+                                                                                        open {{feeder.com_server.name}}</a>
+
+                                                                                </div>
+                                                                                <div>
+
+                                                                                    <a style="color:#000; text-decoration:none;"
+                                                                                        href="{{feeder.com_server.get_edit_url}}">
+                                                                                        <i class="fa fa-gear"></i>
+                                                                                        edit {{feeder.com_server.name}}</a>
+
+                                                                                </div>
+                                                                                <div>
+
+                                                                                    <a style="color:#000; text-decoration:none;"
+                                                                                        href="{{feeder.com_server.get_delete_url}}">
+                                                                                        <i class="fa fa-gear"></i>
+                                                                                        delete {{feeder.com_server.name}}</a>
+
+                                                                                </div>
+                                                                            </span>
+
+                                                                        </li>
+
+
+                                                                    </div>
+                                                                </ul>
+                                                            </li>
+                                                          </div>
+                                                    </ul>
+                                                </li>
+                                                {% endfor %}
+                                                <li>
+                                                    <span>
+                                                        <div>
+                                                            <a style="color:#000; text-decoration:none;"
+                                                                href="{{bus.get_absolute_url}}">
+                                                                <i class="fa fa-gear"></i>
+                                                                open {{bus.name}}</a>
+                                                            <div>
+                                                                <a style="color:#000; text-decoration:none;"
+                                                                    href="{{bus.get_edit_url}}">
+                                                                    <i class="fa fa-gear"></i>
+                                                                    edit {{bus.name}}</a>
+                                                            </div>
+
+                                                            <div>
+                                                                <a style="color:#000; text-decoration:none;"
+                                                                    href="{{bus.get_delete_url}}">
+                                                                    <i class="fa fa-gear"></i>
+                                                                    delete {{bus.name}}</a>
+                                                            </div>
+
+                                                        </div>
+                                                    </span>
+
+                                                </li>
+
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-md-4">
         <div class="card card-stats">
             <div class="card-header">

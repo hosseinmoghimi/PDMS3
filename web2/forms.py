@@ -15,16 +15,18 @@ class ReadForm(forms.Form):
     com_server_id=forms.IntegerField(required=True)
 
 class WriteCommandForm(forms.Form):
-    host=forms.CharField(max_length=50,required=True)
-    port=forms.IntegerField( required=True)
+    host=forms.CharField(max_length=50,required=False)
+    port=forms.IntegerField( required=False)
     address=forms.IntegerField(required=True)
     value=forms.IntegerField(required=True)
+    feeder_id=forms.IntegerField(required=False)
     # value=forms.CharField(max_length=50,required=True)
 
 class ReadCommandForm(forms.Form):
-    host=forms.CharField(max_length=50,required=True)
-    port=forms.IntegerField( required=True)
+    host=forms.CharField(max_length=50,required=False)
+    port=forms.IntegerField( required=False)
     address=forms.IntegerField(required=True)
+    feeder_id=forms.IntegerField(required=False)
     # value=forms.CharField(max_length=50,required=True)
 
 class GetAnalogDataForm(forms.Form):

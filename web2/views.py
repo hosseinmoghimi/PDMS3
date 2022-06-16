@@ -4,10 +4,10 @@ from django.http import JsonResponse
 from django.http.response import Http404
 
 from core.views import CoreContext
-from .serializers import AreaSerializer, BusSerializer, ComServerSerializer, AnalogComponentSerializer,BinaryComponentSerializer, FeederFullSerializer, FeederSerializer, FeederSerializerForChart
-from .apps import APP_NAME
-from .forms import *
-from .repo import AreaRepo, BusRepo,ComServerRepo, FeederRepo
+from web2.serializers import AreaSerializer, BusSerializer, ComServerSerializer, AnalogComponentSerializer,BinaryComponentSerializer, FeederFullSerializer, FeederSerializer, FeederSerializerForChart, LogSerializer
+from web2.apps import APP_NAME
+from web2.forms import *
+from web2.repo import AreaRepo, BusRepo,ComServerRepo, FeederRepo, LogRepo
 from django.views import View
 from django.shortcuts import redirect, render
 TEMPLATE_ROOT = APP_NAME+"/"
@@ -38,7 +38,7 @@ class BusBarView(View):
         context['feeders']=feeders
        
         context['bus_color']=buses.first().get_color()
-        return render(request,TEMPLATE_ROOT+"bas-bar.html",context)
+        return render(request,TEMPLATE_ROOT+"bus-bar.html",context)
 
 class ComServerViews(View):
     def com_server(self,request,*args, **kwargs):
