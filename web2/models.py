@@ -90,8 +90,8 @@ class Feeder(models.Model):
     bus=models.ForeignKey("bus", verbose_name=_("bus"), on_delete=models.CASCADE)
     voltage_transformers_ratio=models.IntegerField(_("feeder_voltage_transformers_ratio") ,default=350)
     
-    register_cb_open=models.IntegerField(_("register_cb_open"),default=REGISTER_CIRCUIT_BREAKER_OPEN)
     register_cb_close=models.IntegerField(_("register_cb_close"),default=REGISTER_CIRCUIT_BREAKER_CLOSE)
+    register_cb_open=models.IntegerField(_("register_cb_open"),default=REGISTER_CIRCUIT_BREAKER_OPEN)
     register_cb_test=models.IntegerField(_("register_cb_test"),default=REGISTER_CIRCUIT_BREAKER_TEST)
     register_cb_trip=models.IntegerField(_("register_cb_trip"),default=REGISTER_CIRCUIT_BREAKER_TRIP)
     register_cb_servive=models.IntegerField(_("register_cb_servive"),default=REGISTER_CIRCUIT_BREAKER_SERVICE)
@@ -309,10 +309,10 @@ class Feeder(models.Model):
 
 
     
-    def get_last_values(self,count):
-        objects=AnalogComponent.objects.filter(feeder=self).order_by("-date_added")
+    def get_last_values(self,count=100):
+        objects=AnalogComponent.objects.filter(feeder_id=self.pk).order_by("-date_added")
         return {
-            
+
                 FeederComponentNameEnum.REGISTER_I_A: objects.filter(name=FeederComponentNameEnum.REGISTER_I_A)[:count],
                 FeederComponentNameEnum.REGISTER_I_B: objects.filter(name=FeederComponentNameEnum.REGISTER_I_B)[:count],
                 FeederComponentNameEnum.REGISTER_I_C: objects.filter(name=FeederComponentNameEnum.REGISTER_I_C)[:count],
