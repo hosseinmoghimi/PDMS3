@@ -11,7 +11,7 @@ class LogSerializer(serializers.ModelSerializer):
 class ComServerSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComServer
-        fields = ['id', 'name','color','reading','interval']
+        fields = ['id', 'name','color','reading','interval','get_absolute_url']
 
 
 class AreaSerializer(serializers.ModelSerializer):

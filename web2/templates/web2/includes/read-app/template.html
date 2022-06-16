@@ -1,28 +1,26 @@
 <div id="read-app">
-    <div class="card"  v-for="com_server in com_servers">
+    <div class="card" v-for="com_server in com_servers">
         <div class="card-body">
             <div class="text-left">
                 <div>
                     <div class="row">
                         <div class="col-6">
-
-                            <h3>
-                                <span :class="'text-'+com_server.color">
-                                    <span v-text="com_server.name"></span>
-                                </span>
-                            </h3>
+                            <a :href="com_server.get_absolute_url">
+                                <h3>
+                                    <span :class="'text-'+com_server.color">
+                                        <span v-text="com_server.name"></span>
+                                    </span>
+                                </h3>
+                            </a>
                         </div>
                         <div class="col-3">
                             <input type="number" class="form-control" placeholder="Interval (ms)"
                                 v-model="com_server.interval">
-
                         </div>
                         <div class="col-3">
                             <button v-if="!com_server.reading" @click="read_com_server(com_server)"
                                 class="btn btn-warning">Read</button>
-
                             <button v-if="com_server.reading" class="btn btn-success">Reading...</button>
-
                         </div>
                     </div>
                 </div>

@@ -44,15 +44,9 @@ class LeoModbus(ModbusClient):
             time.sleep(RETRY_TO_CONNECT_DELAY)
 
     def write_single_coil(self,address,value):
-        print("address")
-        print(address)
-        print("value")
-        print(value)
         is_ok=False
         if self.is_open():           
             is_ok = super(LeoModbus,self).write_single_coil(address, value)
-        print("is_ok")
-        print(is_ok)
         return is_ok
     def read_holding_registers(self,address,count):
         if self.is_open():
@@ -69,11 +63,14 @@ class LeoModbus(ModbusClient):
             # print("reg ad #0 to 9: "+str(self.regs))
             # if success display registers
             if self.regs:
-                print(f"registers [{address}-{address+count}] : "+str(self.regs))
+                # print(f"registers [{address}-{address+count}] : "+str(self.regs))
                 return self.regs
     def disconnect(self):
         self.close()
     def read_coils(self,address,count):
+        print(f"read_coils")
+        print(f"address:{address}")
+        print(f"count:{count}")
         if self.is_open():
             # address=1
             # read 10 registers at address 0, store result in regs list

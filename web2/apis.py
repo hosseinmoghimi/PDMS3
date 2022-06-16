@@ -104,6 +104,39 @@ class GetFeederApi(APIView):
                     context['result']=SUCCEED
         return JsonResponse(context)
 
+class GetFeederDataApi11111111111(APIView):
+    def post(self,request,*args, **kwargs):
+        user=request.user
+        context={}
+        level=1
+        feeder=None
+        context['result']=FAILED
+        if request.method=='POST':
+            level=2
+            
+            get_feeder_data_form=GetFeederDataForm(request.POST)
+            if get_feeder_data_form.is_valid():
+                level=3
+                feeder_id=get_feeder_data_form.cleaned_data['feeder_id']
+                FeederRepo(user=request.user).create_sample_data(feeder_id=feeder_id)
+                feeder=FeederRepo(user=request.user).feeder(feeder_id)
+                feeder.circuit_breaker.get_value(request)
+        elif request.method=='GET' and 'pk' in kwargs:
+            level=4
+            feeder_id=kwargs['pk']
+            feeder=FeederRepo(user=request.user).feeder(feeder_id)
+        if feeder is not None:
+            level=5
+            context['feeder']=FeederSerializerForChart(feeder).data
+            context['value_a_list']=list(ai.value for ai in feeder.current_transformer.value_a_list())
+            context['value_b_list']=list(ai.value for ai in feeder.current_transformer.value_b_list())
+            context['value_c_list']=list(ai.value for ai in feeder.current_transformer.value_c_list())
+
+            context['result']=SUCCEED
+        context['level']=level
+        return JsonResponse(context)
+
+
 class BasicApi(APIView):
     def add_com_server(self,request,*args, **kwargs):
         context={}
@@ -151,37 +184,6 @@ class BasicApi(APIView):
                 context['bus']=BusSerializer(bus).data
                 context['result']=SUCCEED
         return JsonResponse(context)
-    def get_feeder_data(self,request,*args, **kwargs):
-        user=request.user
-        context={}
-        level=1
-        feeder=None
-        context['result']=FAILED
-        if request.method=='POST':
-            level=2
-            
-            get_feeder_data_form=GetFeederDataForm(request.POST)
-            if get_feeder_data_form.is_valid():
-                level=3
-                feeder_id=get_feeder_data_form.cleaned_data['feeder_id']
-                FeederRepo(user=request.user).create_sample_data(feeder_id=feeder_id)
-                feeder=FeederRepo(user=request.user).feeder(feeder_id)
-                feeder.circuit_breaker.get_value(request)
-        elif request.method=='GET' and 'pk' in kwargs:
-            level=4
-            feeder_id=kwargs['pk']
-            feeder=FeederRepo(user=request.user).feeder(feeder_id)
-        if feeder is not None:
-            level=5
-            context['feeder']=FeederSerializerForChart(feeder).data
-            context['value_a_list']=list(ai.value for ai in feeder.current_transformer.value_a_list())
-            context['value_b_list']=list(ai.value for ai in feeder.current_transformer.value_b_list())
-            context['value_c_list']=list(ai.value for ai in feeder.current_transformer.value_c_list())
-
-            context['result']=SUCCEED
-        context['level']=level
-        return JsonResponse(context)
-
 
     def get_analog_data(self,request,*args, **kwargs):
         user=request.user

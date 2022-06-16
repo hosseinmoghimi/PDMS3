@@ -9,6 +9,7 @@ from authentication.repo import ProfileRepo
 from django.db.models import Q
 from authentication.repo import ProfileRepo
 
+CURRENT_SCALE=1
 class ComServerRepo:
     def __init__(self,*args, **kwargs):
         self.request=None
@@ -76,13 +77,13 @@ class ComServerRepo:
                         ctd.feeder=feeder
                         if feeder.register_ct_i_a==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_I_A
-                            feeder.i_a=value
+                            feeder.i_a=value/CURRENT_SCALE
                         if feeder.register_ct_i_b==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_I_B
-                            feeder.i_b=value
+                            feeder.i_b=value/CURRENT_SCALE
                         if feeder.register_ct_i_c==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_I_C
-                            feeder.i_c=value
+                            feeder.i_c=value/CURRENT_SCALE
                         
                         if feeder.register_vt_v_a==register:
                             ctd.name=FeederComponentNameEnum.REGISTER_V_A
@@ -109,12 +110,13 @@ class ComServerRepo:
                             ctd.name=FeederComponentNameEnum.REGISTER_S
 
                         ctd.register=register
-                        ctd.origin_value=value
+                        ctd.origin_value=value/CURRENT_SCALE
                         ctd.status=InputOutputStatusEnum.SUCCESSFULL
                         ctd.save()
                         feeder.save()
                     register+=1
             if com_server_data.code_name==ComServerOperationCodeEnum.READ_COILS:
+                print("READ_COILS")
                 print(leo_modbus.host())
                 values=leo_modbus.read_coils(start_address,count)
                 register=start_address
