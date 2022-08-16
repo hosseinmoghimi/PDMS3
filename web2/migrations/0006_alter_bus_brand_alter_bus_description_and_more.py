@@ -13,22 +13,22 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='bus',
             name='brand',
-            field=models.CharField(blank=True, max_length=5000, null=True, verbose_name='brand'),
+            field=models.CharField(blank=True, max_length=2000, null=True, verbose_name='brand'),
         ),
         migrations.AlterField(
             model_name='bus',
             name='description',
-            field=models.CharField(blank=True, max_length=5000, null=True, verbose_name='description'),
+            field=models.CharField(blank=True, max_length=2000, null=True, verbose_name='description'),
         ),
         migrations.AlterField(
             model_name='bus',
             name='model_name',
-            field=models.CharField(blank=True, max_length=5000, null=True, verbose_name='model_name'),
+            field=models.CharField(blank=True, max_length=2000, null=True, verbose_name='model_name'),
         ),
         migrations.AlterField(
             model_name='bus',
             name='serial_no',
-            field=models.CharField(blank=True, max_length=5000, null=True, verbose_name='serial_no'),
+            field=models.CharField(blank=True, max_length=2000, null=True, verbose_name='serial_no'),
         ),
         migrations.AlterField(
             model_name='comserver',
@@ -43,6 +43,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='log',
             name='description',
-            field=models.CharField(blank=True, max_length=5000, null=True, verbose_name='description'),
+            field=models.CharField(blank=True, max_length=2000, null=True, verbose_name='description'),
         ),
     ]

@@ -25,6 +25,7 @@ class Employee(models.Model):
     def get_absolute_url(self):
         return reverse("Employee_detail", kwargs={"pk": self.pk})
 
+
 class ComServerDataBlock(models.Model):
     com_server=models.ForeignKey("comserver", verbose_name=_("comserver"), on_delete=models.CASCADE)
     start_address=models.IntegerField(_("start_address"),default=1)
@@ -40,6 +41,7 @@ class ComServerDataBlock(models.Model):
     def persian_date_added(self):
         return PersianCalendar().from_gregorian(self.date_added)
     
+
 class ComServer(models.Model):
     name=models.CharField(_("name"), max_length=50)
     ip1=models.CharField(_("ip1"),default=COM_SERVER_DEFAULT_IP, max_length=50)
@@ -78,7 +80,6 @@ class ComServer(models.Model):
 
     def get_edit_url(self):
         return f"""{ADMIN_URL}{APP_NAME}/{self.class_name}/{self.pk}/change/"""
-
 
 
 class Feeder(models.Model):
@@ -322,14 +323,15 @@ class Feeder(models.Model):
                 FeederComponentNameEnum.REGISTER_V_C: objects.filter(name=FeederComponentNameEnum.REGISTER_V_C)[:count],
         }
 
+
 class Bus(models.Model):
     area=models.ForeignKey("area", verbose_name=_("area"), on_delete=models.CASCADE)
     name=models.CharField(_("name"), max_length=50)
     tip=models.CharField(_("tip"),choices=VoltageLevelEnum.choices,null=True,blank=True, max_length=50)
-    brand=models.CharField(_("brand"),null=True,blank=True, max_length=5000)
-    model_name=models.CharField(_("model_name"),null=True,blank=True, max_length=5000)
-    serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=5000)
-    description=models.CharField(_("description"),null=True,blank=True, max_length=5000)
+    brand=models.CharField(_("brand"),null=True,blank=True, max_length=2000)
+    model_name=models.CharField(_("model_name"),null=True,blank=True, max_length=2000)
+    serial_no=models.CharField(_("serial_no"),null=True,blank=True, max_length=2000)
+    description=models.CharField(_("description"),null=True,blank=True, max_length=2000)
     voltage=models.IntegerField(_("voltage"))
     is_live=models.BooleanField(_("is live ?"),default=True)
     class_name="bus"
@@ -404,7 +406,7 @@ class Log(models.Model):
     date_added=models.DateTimeField(_("date_added"), auto_now=False, auto_now_add=True)
     status=models.CharField(_("status"),choices=LogStatusEnum.choices, max_length=50)
     # priority=models.CharField(_("status"),choices=LogPriority.choices, max_length=50)
-    description=models.CharField(_("description"),null=True,blank=True, max_length=5000)
+    description=models.CharField(_("description"),null=True,blank=True, max_length=2000)
      
     class Meta:
         verbose_name = _("Log")

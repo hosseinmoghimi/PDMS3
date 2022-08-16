@@ -281,8 +281,17 @@ class FeederRepo:
         host=kwargs['host']
         port=kwargs['port']
         feeder=FeederRepo(request=self.request).feeder(*args, **kwargs)
-        host=feeder.com_server.ip1
-        port=feeder.com_server.port1
+        if feeder is not None:
+            host=feeder.com_server.ip1
+            port=feeder.com_server.port1
+        
+        # print(50*"#$")
+        # print(host)
+        # print(value)
+        # print(address)
+        # print(port)
+        # print(50*"#$")
+        
         leo_modbus=LeoModbus(request=request)
         leo_modbus.connect(host=host,port=port)
         a=leo_modbus.write_single_coil(address=address,value=value)

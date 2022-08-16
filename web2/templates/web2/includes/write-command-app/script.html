@@ -1,57 +1,47 @@
 <script>
+    let START_REGISTER_ADDRESS = 2051
+    let STOP_REGISTER_ADDRESS = 2052
     let write_command_app = new Vue({
         el: "#write-command-app",
         data: {
-            address: 2051,
+            show_start: false,
+            show_stop: false,
         },
         methods: {
-            start_: function (host,port,address,value) {
-                return this.write_command(host,port,address,value)
-            },
-            stop_: function (host,port,address,value) {
-                return this.write_command(host,port,address,value)
-            },
+       
             start: function () {
-                return this.write_command(2051,1)
+                return this.write_command(START_REGISTER_ADDRESS, 1)
+                this.show_start = false
             },
             stop: function () {
-                return this.write_command(2052,1)
+                return this.write_command(STOP_REGISTER_ADDRESS, 1)
+                this.show_stop = false
             },
-            write_command_: function (host,port,address,value) {
+            write_command: function (host, port, address, value) {
                 let url = "{% url 'web2:write_command' %}"
                 let payload = {
                     csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    host: host,
+                    // host: host,
                     feeder_id: feeder_id,
-                    port: port,
+                    // port: port,
                     address: address,
                     value: value,
                 }
                 console.log(payload)
                 let posting = $.post(url, payload)
+                posting.fail(() => {
+                    write_command_app.show_start = false
+                    write_command_app.show_stop = false
+
+                })
                 posting.done((data) => {
+                    write_command_app.show_start = false
+                    write_command_app.show_stop = false
                     console.log(data)
                     if (data.result === 'SUCCEED') {
                     }
                 })
             },
-        
-            write_command: function (address,value) {
-                let url = "{% url 'web2:write_command' %}"
-                let payload = {
-                    csrfmiddlewaretoken: csrfmiddlewaretoken,
-                    feeder_id: feeder_id,
-                    value: value,
-                    address: address,
-                }
-                console.log(payload)
-                let posting = $.post(url, payload)
-                posting.done((data) => {
-                    console.log(data)
-                    if (data.result === 'SUCCEED') {
-                    }
-                })
-            }
         }
     })
 </script>

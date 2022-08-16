@@ -1,8 +1,23 @@
 <div class="card" id="write-command-app">
     <div class="card-body">
-        <div>
-            <button @click="start()" class="btn btn-success">OPEN</button>
-            <button @click="stop()" class="btn btn-danger">CLOSE</button>
+        <div v-if="!show_start && !show_stop">
+            <button @click="show_start=true" class="btn btn-success">START</button>
+            <button @click="show_stop=true" class="btn btn-danger">STOP</button>
         </div>
+        <div v-if="show_start">
+            <p>
+                You are starting. Are you sure?
+            </p>
+            <button @click="start()" class="btn btn-success">Yes</button>
+            <button @click="show_start=false" class="btn btn-secondary">No</button>
+        </div>
+        <div v-if="show_stop">
+            <p>
+                You are stoping. Are you sure?
+            </p>
+            <button @click="stop()" class="btn btn-danger">Yes</button>
+            <button @click="show_stop=false" class="btn btn-secondary">No</button>
+        </div>
+       
     </div>
 </div>

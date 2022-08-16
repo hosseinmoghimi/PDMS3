@@ -6,6 +6,11 @@
             <div class="card-header">
                 <h4 class="title text-dark">
                     {{com_server.name}}
+                    {% if perms.web2.change_comserver %}
+                      <a title="Edit" class="text-warning" href="{{com_server.get_edit_url}}">
+                        <i class="fa fa-edit"></i>
+                      </a>
+                    {% endif %}
                 </h4>
             </div>
             <div class="card-body">
