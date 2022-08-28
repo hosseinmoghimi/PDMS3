@@ -13,6 +13,12 @@ RETRY_TO_CONNECT_TIME=2
 test=True
 DO_LOG=False
 class LeoModbus(ModbusClient):
+    # def is_open(self):
+    #     return self.is_open
+    # def host(self,host):
+    #     self.host=host
+    # def port(self,port):
+    #     self.port=port
     def __init__(self,*args, **kwargs):
         self.user=kwargs['user'] if 'user' in kwargs else None
         if 'request' in kwargs:
@@ -25,15 +31,18 @@ class LeoModbus(ModbusClient):
         self.profile=ProfileRepo(request=self.request).me
         super(LeoModbus, self).__init__()
     def connect(self,host,port):
-        self.host(host)
-        self.port(port)
+        # print(host)
+        # print(port)
+        # print(20*"  #  ")
+        self.host=(host)
+        self.port=int(port)
         retry=0
         # open or reconnect TCP to server
-        while not self.is_open() and retry<RETRY_TO_CONNECT_TIME:
+        while not self.is_open and retry<RETRY_TO_CONNECT_TIME:
             if self.open():
-                print(self.host() +" is Open")
+                print(self.host +" is Open")
             retry+=1
-            if not self.open():
+            if not self.open:
                 print("unable to connect to "+host+":"+str(port))
                 if DO_LOG:
                     title=f"unable to connect to {self.host_address}:{self.port_no} "
@@ -49,7 +58,10 @@ class LeoModbus(ModbusClient):
             is_ok = super(LeoModbus,self).write_single_coil(address, value)
         return is_ok
     def read_holding_registers(self,address,count):
-        if self.is_open():
+        # print(f"read_holding_registers")
+        # print(f"address:{address}")
+        # print(f"count:{count}")
+        if self.is_open:
             self.regs=[]
             # read 10 registers at address 0, store result in regs list
             regs = super(LeoModbus,self).read_holding_registers(address, count)
@@ -71,7 +83,7 @@ class LeoModbus(ModbusClient):
         print(f"read_coils")
         print(f"address:{address}")
         print(f"count:{count}")
-        if self.is_open():
+        if self.is_open:
             # address=1
             # read 10 registers at address 0, store result in regs list
             self.regs = super(LeoModbus,self).read_coils(address, count)

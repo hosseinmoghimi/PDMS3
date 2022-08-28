@@ -95,7 +95,7 @@ class Feeder(models.Model):
     register_cb_open=models.IntegerField(_("register_cb_open"),default=REGISTER_CIRCUIT_BREAKER_OPEN)
     register_cb_test=models.IntegerField(_("register_cb_test"),default=REGISTER_CIRCUIT_BREAKER_TEST)
     register_cb_trip=models.IntegerField(_("register_cb_trip"),default=REGISTER_CIRCUIT_BREAKER_TRIP)
-    register_cb_servive=models.IntegerField(_("register_cb_servive"),default=REGISTER_CIRCUIT_BREAKER_SERVICE)
+    register_cb_service=models.IntegerField(_("register_cb_service"),default=REGISTER_CIRCUIT_BREAKER_SERVICE)
     register_cb_spare1=models.IntegerField(_("register_cb_spare1"),default=REGISTER_CIRCUIT_BREAKER_SPARE1)
     register_cb_spare2=models.IntegerField(_("register_cb_spare2"),default=REGISTER_CIRCUIT_BREAKER_SPARE2)
 
@@ -150,14 +150,15 @@ class Feeder(models.Model):
             cb_close=BinaryComponent.objects.filter(feeder=self).filter(name=FeederComponentNameEnum.REGISTER_CB_CLOSE).order_by('-date_added').first().value()
             cb_test=BinaryComponent.objects.filter(feeder=self).filter(name=FeederComponentNameEnum.REGISTER_CB_TEST).order_by('-date_added').first().value()
             cb_trip=BinaryComponent.objects.filter(feeder=self).filter(name=FeederComponentNameEnum.REGISTER_CB_TRIP).order_by('-date_added').first().value()
-            if cb_close:
-                status= CircuitBreakerStatusEnum.CLOSE
-            if cb_open:
-                status= CircuitBreakerStatusEnum.OPEN
+           
             if cb_test:
                 status= CircuitBreakerStatusEnum.TEST
             if cb_trip:
                 status= CircuitBreakerStatusEnum.TRIP
+            if cb_close:
+                status= CircuitBreakerStatusEnum.CLOSE
+            if cb_open:
+                status= CircuitBreakerStatusEnum.OPEN
                 
        
 

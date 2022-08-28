@@ -43,12 +43,12 @@ class ComServerRepo:
         com_server_datas=ComServerDataBlock.objects.filter(com_server=com_server)
         leo_modbus=LeoModbus(request=self.request)
         leo_modbus.connect(host=com_server.ip1,port=com_server.port1)
-        if not leo_modbus.is_open():
+        if not leo_modbus.is_open:
             return
         for com_server_data in com_server_datas:
             start_address=com_server_data.start_address
             count=com_server_data.count
-            register=start_address
+            register=start_address+1
             if com_server_data.code_name==ComServerOperationCodeEnum.READ_HOLDING_REGISTERS:
                 values=leo_modbus.read_holding_registers(start_address,count)
                 if values is None:
@@ -72,6 +72,12 @@ class ComServerRepo:
                         Q(register_s=register) 
 
                     ).first()
+                    # print(10*"#")
+                    # print("register!!!!!")
+                    # print(register)
+                    # print("feeder")
+                    # print(feeder)
+                    # print(10*"#")
                     if feeder is not None:
                         ctd=AnalogComponent()
 
@@ -117,10 +123,8 @@ class ComServerRepo:
                         feeder.save()
                     register+=1
             if com_server_data.code_name==ComServerOperationCodeEnum.READ_COILS:
-                print("READ_COILS")
-                print(leo_modbus.host())
                 values=leo_modbus.read_coils(start_address,count)
-                register=start_address
+                register=start_address+1
                 if values is None:
                     return
                     
@@ -132,11 +136,29 @@ class ComServerRepo:
                             Q(register_cb_open=register) |
                             Q(register_cb_close=register) |
                             Q(register_cb_test=register) |
-                            Q(register_cb_trip=register) 
+                            Q(register_cb_trip=register) |
+                            Q(register_cb_service=register) 
 
                         ).first()
+                        # print(10*"#")
+                        # print("register")
+                        # print(register)
+                        # print("feeder")
+                        # print(feeder)
+                        # print(10*"#")
                         if feeder is not None:
                             cb=BinaryComponent()
+                            # print(20*"#")
+                            # print("register")
+                            # print(register)
+                            # print("value")
+                            # print(value)
+                            # print(20*"#")
+                            # print(feeder.register_cb_close)
+                            # print(feeder.register_cb_open)
+                            # print(feeder.register_cb_test)
+                            # print(feeder.register_cb_service)
+                            # print(feeder.register_cb_trip)
 
                             cb.feeder=feeder
                             if feeder.register_cb_open==register:
